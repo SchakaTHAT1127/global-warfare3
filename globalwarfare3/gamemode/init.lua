@@ -1,10 +1,12 @@
-AddCSLuaFile("cl_init.lua")      -- Client dosyasını gönder
-AddCSLuaFile("menu/cl_menu.lua")    -- Menu dosyası
-AddCSLuaFile("shared.lua")       -- Shared dosyayı gönder
-include("shared.lua")            -- Server’da çalıştır
-include("player/playercustomization.lua")  -- Server dosyasını çalıştır
-include("player/playerloadout.lua")  -- Server dosyasını çalıştır
-include("menu/sv_menu.lua")   -- Server dosyasını çalıştır
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("vgui/cl_menu.lua")
+AddCSLuaFile("vgui/cl_teampanel.lua")
+AddCSLuaFile("shared.lua")
+
+include("shared.lua") 
+include("player/playercustomization.lua")
+include("player/playerloadout.lua") 
+
 
 DeriveGamemode("sandbox")
 USA = 1
