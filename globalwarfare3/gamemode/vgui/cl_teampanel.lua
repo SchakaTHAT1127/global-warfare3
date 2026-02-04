@@ -1,5 +1,3 @@
-AddCSLuaFile("../shared.lua")
-
 function teamPanelMenu(parentPanel)
     local panel = parentPanel
 
@@ -14,7 +12,6 @@ function teamPanelMenu(parentPanel)
     local sH = sW * aspect
 
     local btnW = imgW -- make the buttons and images same wide
-    print(nH)
 
     local DermaButton = vgui.Create( "DButton", panel)
     DermaButton:SetText( "" ) 
@@ -98,11 +95,11 @@ function teamPanelMenu(parentPanel)
     vigmid:SetPos(ScrW()/2.25,ScrH()-ScrH())
     vigmid:SetSize(ScrW()/10, ScrH()) 
 
-    soviet:SetImage("gamemodes/globalwarfare3/gamemode/content/materials/soviet.png")
-    nato:SetImage("gamemodes/globalwarfare3/gamemode/content/materials/nato.png")
+    soviet:SetImage("gamemodes/globalwarfare3/content/materials/soviet.png")
+    nato:SetImage("gamemodes/globalwarfare3/content/materials/nato.png")
     --vignet and vigmid is just vignette efects
-    vignet:SetImage("gamemodes/globalwarfare3/gamemode/content/materials/vignet.png")
-    vigmid:SetImage("gamemodes/globalwarfare3/gamemode/content/materials/lalali.png")
+    vignet:SetImage("gamemodes/globalwarfare3/content/materials/vignet.png")
+    vigmid:SetImage("gamemodes/globalwarfare3/content/materials/lalali.png")
 
     return panel
 end
