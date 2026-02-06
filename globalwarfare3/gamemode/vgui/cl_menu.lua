@@ -70,7 +70,7 @@ function menuStart()
         surface.DrawRect(w/2, 0, w/2, h) -- right screen and red
     end
     mSheet:AddSheet("   Team Change   ", teamPanel, "icon16/group_go.png")
-    teamPanelMenu(teamPanel) --Calling the panel code
+    GW3.teamPanelMenu(teamPanel) --Calling the panel code
 end
 
 --openning system of the menu, grabbed right from 2.3 

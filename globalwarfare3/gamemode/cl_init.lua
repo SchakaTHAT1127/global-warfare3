@@ -1,6 +1,8 @@
 include("shared.lua")
 include("vgui/cl_menu.lua")
 include("vgui/cl_teampanel.lua")
+include("sounds/cl_soundpr.lua")
+include("logihandler/cl_logihandler.lua")
 
 -- These are some usefull presets i made back in the day always usefull dont delete
 

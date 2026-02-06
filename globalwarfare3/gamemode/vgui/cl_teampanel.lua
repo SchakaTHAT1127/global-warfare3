@@ -1,4 +1,7 @@
-function teamPanelMenu(parentPanel)
+AddCSLuaFile("../shared.lua")
+GW3 = GW3 or {} -- Gamemode ismine özel bir tablo oluştur
+
+function GW3.teamPanelMenu(parentPanel)
     local panel = parentPanel
 
     local scale = ScrW() * 0.3 
@@ -21,6 +24,7 @@ function teamPanelMenu(parentPanel)
         net.Start( "SendTeam" )
             net.WriteUInt(1,2) -- This is NATO
         net.SendToServer()
+        GW3.uiSound("button")
     end
     DermaButton.Paint = function(self, w, h)
         surface.SetDrawColor(8, 8, 8, 215)
@@ -49,7 +53,8 @@ function teamPanelMenu(parentPanel)
     DermaButton.DoClick = function()
         net.Start( "SendTeam" )
             net.WriteUInt(2,2) -- This is soviet
-        net.SendToServer()
+        net.SendToServer()  
+        GW3.uiSound("button")
     end
 
     DermaButton.Paint = function(self, w, h)

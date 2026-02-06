@@ -1,6 +1,7 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("globalwarfare3/gamemode/vgui/cl_logipanel.lua")
+include("globalwarfare3/gamemode/logihandler/sv_logihandler.lua")
 include("shared.lua")
 
 util.AddNetworkString("alertPlayer")

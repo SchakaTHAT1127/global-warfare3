@@ -1,12 +1,15 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("vgui/cl_menu.lua")
 AddCSLuaFile("vgui/cl_teampanel.lua")
+AddCSLuaFile("sounds/cl_soundpr.lua")
+AddCSLuaFile("logihandler/cl_logihandler.lua")
 AddCSLuaFile("shared.lua")
 
+include("logihandler/sv_logihandler.lua")
 include("shared.lua") 
 include("player/playercustomization.lua")
 include("player/playerloadout.lua") 
-
+include("vgui/sv_menu.lua")
 
 DeriveGamemode("sandbox")
 USA = 1
