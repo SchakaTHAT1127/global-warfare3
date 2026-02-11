@@ -18,7 +18,7 @@ end)
 
 function GW3.entCall(called, team, ply, sentPos)
     local wpns = {
-        ["assault"]    = { [1] = "ent_jack_gmod_ezweapon_m16", [2] = "ent_jack_gmod_ezweapon_ak" },
+        ["assault"]    = { [1] = "sent_ball", [2] = "ent_jack_gmod_ezweapon_ak" },
         ["machinegun"] = { [1] = "ent_jack_gmod_ezweapon_m240",  [2] = "ent_jack_gmod_ezweapon_rpk"},
         ["sniper"]     = { [1] = "ent_jack_gmod_ezweapon_sniper1", [2] = "ent_jack_gmod_ezweapon_svd" },
         ["antitank"]   = { [1] = "ent_jack_gmod_ezweapon_at41", [2] = "ent_jack_gmod_ezweapon_rpg7"  },
