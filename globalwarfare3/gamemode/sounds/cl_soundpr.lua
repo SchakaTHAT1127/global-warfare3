@@ -5,6 +5,7 @@ function GW3.uiSound(wanted) -- made this for easier ui sfx's
     local sounds = {
         ["button"] = "common/stuck1.wav",
         ["team"]   = "ui/team_join.wav",
+        ["locked"]   = "entsound/lockedchain.wav",
         ["error"]  = "buttons/button10.wav"
     } -- may add more later didnt really put work on it
 

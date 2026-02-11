@@ -5,6 +5,7 @@ include("globalwarfare3/gamemode/logihandler/sv_logihandler.lua")
 include("shared.lua")
 
 util.AddNetworkString("alertPlayer")
+
 function ENT:Initialize()
     crateLogistic = 200 -- adding the initial logistic amount
     self:SetModel( "models/props/de_nuke/crate_extrasmall.mdl" )

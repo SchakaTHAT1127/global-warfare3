@@ -25,6 +25,7 @@ function GW3.teamPanelMenu(parentPanel)
             net.WriteUInt(1,2) -- This is NATO
         net.SendToServer()
         GW3.uiSound("button")
+        GW3.uiSound("team")
     end
     DermaButton.Paint = function(self, w, h)
         surface.SetDrawColor(8, 8, 8, 215)
@@ -55,6 +56,7 @@ function GW3.teamPanelMenu(parentPanel)
             net.WriteUInt(2,2) -- This is soviet
         net.SendToServer()  
         GW3.uiSound("button")
+        GW3.uiSound("team")
     end
 
     DermaButton.Paint = function(self, w, h)

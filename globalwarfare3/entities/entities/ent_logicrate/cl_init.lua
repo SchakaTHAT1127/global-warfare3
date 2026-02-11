@@ -4,6 +4,7 @@ include("globalwarfare3/gamemode/logihandler/cl_logihandler.lua")
 
 function ENT:Draw()
     self:DrawModel() -- Draws the model of the Entity. This function is called every frame.
+    logiEntPos = self:GetPos()
 end
 
 function logisticMenuStart()
@@ -59,7 +60,7 @@ function logisticMenuStart()
     end
 
     lSheet:AddSheet("   Logistic Crate   ", logiPanel, "icon16/report.png")
-    GW3.logiPanelMenu(logiPanel) --Calling the panel code
+    GW3.logiPanelMenu(logiPanel, logiEntPos) --Calling the panel code
 end
 
 net.Receive( "alertPlayer", function( len, ply )
