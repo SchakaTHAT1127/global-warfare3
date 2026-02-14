@@ -2,12 +2,33 @@ include("shared.lua")
 include("globalwarfare3/gamemode/vgui/cl_logipanel.lua")
 include("globalwarfare3/gamemode/logihandler/cl_logihandler.lua")
 
+-- cl_init.lua içine yazılacak
 function ENT:Draw()
-    self:DrawModel() -- Draws the model of the Entity. This function is called every frame.
-    logiEntPos = self:GetPos()
+    self:DrawModel() -- Entity'nin kendisini (sandığı) çizmesi için şart
 end
 
-function logisticMenuStart()
+hook.Add("HUDPaint", "DrawCrateHint_", function()
+    for _, ent in ipairs(ents.FindByClass("ent_logicrate")) do
+        if IsValid(ent) then
+            local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
+            if distance < 300 then
+                -- Sandığın üzerindeki özel değeri oku
+                local ammount = ent:GetNWInt("LogiAmount", 0) 
+                
+                local worldPos = ent:GetPos() + Vector(0, 0, 25)
+                local screenData = worldPos:ToScreen()
+                if screenData.visible then
+                    local x, y = screenData.x, screenData.y
+                    draw.RoundedBox(4, x-120, y - 13, 240, 25, Color(0, 0, 0, 150))
+                    draw.SimpleText("NATO LOGISTIC CRATE", "TargetID", x, y, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.RoundedBox(4, x-90, y+23, 180, 25, Color(0, 33, 203, 90))
+                    draw.SimpleText("Amount: " .. ammount, "TargetID", x, y + 36, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                end
+            end
+        end
+    end
+end)
+function logisticMenuStart(targetEntity)
     logisticMenu = vgui.Create("DFrame")
     logisticMenu:SetPos(100, 100)
     logisticMenu:SetSize(ScrW(), ScrH())
@@ -60,9 +81,25 @@ function logisticMenuStart()
     end
 
     lSheet:AddSheet("   Logistic Crate   ", logiPanel, "icon16/report.png")
-    GW3.logiPanelMenu(logiPanel, logiEntPos) --Calling the panel code
+    GW3.logiPanelMenu(logiPanel, logiLocation, targetEntity) --Calling the panel code
+    print(logiLocation)
 end
 
-net.Receive( "alertPlayer", function( len, ply )
-    logisticMenuStart()
+net.Receive("alertPlayer", function()
+    local targetEnt = net.ReadEntity() -- Hangi sandık olduğunu al
+    logisticMenuStart(targetEnt) -- Menü fonksiyonuna bu sandığı pasla
+end)
+
+net.Receive( "vectorOfSelf", function( len )
+    logiLocation = net.ReadVector()
+    print(logiLocation)
+end)
+
+net.Receive("logiSend", function()
+    local targetEnt = net.ReadEntity()
+    local amount = net.ReadInt(16)
+    
+    if IsValid(targetEnt) then
+        targetEnt.logisticAmount = amount -- Değeri entity'nin içine kaydet
+    end
 end)

@@ -1,5 +1,5 @@
 GW3 = GW3 or {} -- Gamemode ismine özel bir tablo oluştur
-function GW3.logiPanelMenu(parentPanel, entLocation)
+function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity)
     local ply = LocalPlayer()
     local team = ply:Team()
 
@@ -169,6 +169,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             net.Start("logiRequest")
                 net.WriteString(netString)
                 net.WriteVector(entLocation)
+                net.WriteEntity(targetEntity)
             net.SendToServer()
         end
         btn.Paint = function(self, w, h) PaintCustomButton(self, w, h, label) end
