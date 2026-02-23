@@ -1,5 +1,8 @@
-GW3 = GW3 or {} -- Gamemode ismine özel bir tablo oluştur
-function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity)
+GW3 = GW3 or {}
+
+-- the panel code
+function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
+    print("logiPanelMenu çağırıldı, ben cl_logipanel. aldığım miktar;" ..logiAmount)
     local ply = LocalPlayer()
     local team = ply:Team()
 
@@ -10,7 +13,6 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity)
     -- scaling factors etc.
     local categoryWide = wide * 0.25
     local categoryTall = tall * 0.45
-
     local labelWide = wide * 0.35
     local labelTall = tall * 0.45
     local buttonHeight = tall * 0.035
@@ -18,7 +20,8 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity)
     --defaults
     local DynamicFont = "MenuSelectHud2"
     local DynamicLabelFont = "LabelHud1"
-    -- The descriptions, prob change for team shit
+
+    -- The descriptions
 local descTable = {
         ["assault"] = [[
 NATO Wide Barrel Artillery;
@@ -91,6 +94,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         ["tnt"] = [[
 NATO Wide Barrel Artillery;
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        ]],
+        ["radio"] = [[
+NATO Wide Barrel Artillery;
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         ]]
     }
     -- changes the font by looking at the res v1
@@ -113,6 +120,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         end
     end
 
+    -- other teams cannot open this crate.
     if team != 1 then
         GW3.uiSound("locked")
         local lbl = vgui.Create("DLabel", panel)
@@ -151,7 +159,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         lbl:SetPos(x, y)
         lbl:SetSize(sizex, sizey)
         lbl:SetText(txt)
-        lbl:SetFont(DynamicLabelFont) -- 'setting.labels' yerine döngüde belirlediğimiz değişkeni kullandık
+        lbl:SetFont(DynamicLabelFont)
         lbl:SetWrap(true)
         lbl:SetAutoStretchVertical(true)
         lbl:SetContentAlignment(7)
@@ -165,12 +173,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         btn:Dock(TOP)
         btn:DockMargin(0, 0, 0, 5)
         btn.DoClick = function()
+            local logisticAmount = targetEntity:GetNWInt("logisticAmountNato", 0)
             GW3.uiSound("button")
-            net.Start("logiRequest")
+            net.Start("logisticSendNewAmount")
                 net.WriteString(netString)
                 net.WriteVector(entLocation)
                 net.WriteEntity(targetEntity)
+                net.WriteInt(logisticAmount, 9)
             net.SendToServer()
+            print(logisticAmount)
+            print("çağırdım")
+            if logiAmount <= 0 then
+                print("alo muhittin uzaylılar kacırdı diyorum")
+            end
         end
         btn.Paint = function(self, w, h) PaintCustomButton(self, w, h, label) end
         return btn
@@ -256,7 +271,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
     -----------------------------------------------------
     -- MISC VEHICLE CATEGORY
     -----------------------------------------------------
-
     local DAntiTank = vgui.Create( "DCollapsibleCategory", panel )
     DAntiTank:SetLabel("") 
     DAntiTank:SetPos(wide * 0.45 + categoryWide, tall * 0.05)
@@ -277,7 +291,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
 
-        draw.SimpleTextOutlined("Vehicle Box", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
+        draw.SimpleTextOutlined("Miscs Box", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
     end
 
     local ListMisc = vgui.Create( "DListLayout", DAntiTank ) 
@@ -289,11 +303,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
     AddLabel(ListMisc, descTable["artillery1"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Long-Barreled Artillery", "artillery2")
     AddLabel(ListMisc, descTable["misc"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Radio Kit Crate", "radio")
+    AddLabel(ListMisc, descTable["radio"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- HANDHELD GRENADE CATEGORY
     -----------------------------------------------------
-
     local DGrenade = vgui.Create( "DCollapsibleCategory", panel )
     DGrenade:SetLabel("") 
     DGrenade:SetPos(wide * 0.45 + categoryWide, tall * 0.50)
@@ -332,7 +347,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
     -----------------------------------------------------
     -- MEDİCAL CATEGORY
     -----------------------------------------------------
-
     local DMedical = vgui.Create( "DCollapsibleCategory", panel )
     DMedical:SetLabel("") 
     DMedical:SetPos(wide * 0.125 + categoryWide, tall * 0.40)
@@ -373,7 +387,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
     -----------------------------------------------------
     -- HIGH EXPLOSİVE CATEGORY
     -----------------------------------------------------
-
     local DExplosive = vgui.Create( "DCollapsibleCategory", panel )
     DExplosive:SetLabel("") 
     DExplosive:SetPos(wide * 0.05, tall * 0.50)

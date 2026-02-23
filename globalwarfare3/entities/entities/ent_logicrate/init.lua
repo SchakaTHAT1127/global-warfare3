@@ -4,8 +4,11 @@ AddCSLuaFile("globalwarfare3/gamemode/vgui/cl_logipanel.lua")
 include("globalwarfare3/gamemode/logihandler/sv_logihandler.lua")
 include("shared.lua")
 
-util.AddNetworkString("alertPlayer")
-util.AddNetworkString("vectorOfSelf")
+util.AddNetworkString("callClient")
+util.AddNetworkString("crateVector")
+--[[
+these are the props, when ent gets damaged a random prop will be selected from here
+]]
 local randomProps = {
 	"models/weapons/w_pist_glock18.mdl",
 	"models/weapons/w_eq_eholster_elite.mdl",
@@ -23,6 +26,10 @@ local randomProps = {
 	"models/gibs/furniture_gibs/furniture_chair01a_gib02.mdl"
 }
 
+--[[
+same with top one, this time only sounds.
+]]
+
 local randomSounds = {
 	"physics/cardboard/cardboard_box_break1.wav",
 	"physics/cardboard/cardboard_box_break2.wav",
@@ -35,28 +42,37 @@ local randomSounds = {
 }
 
 function ENT:Initialize()
+	-- the initial logistic amouınt
 	self.crateLogistic = 200
-    self:SetNWInt("LogiAmount", self.crateLogistic) -- İlk değeri tanımla
-    self:SetMaxHealth(1200)
-    self:SetHealth(1200)
-    self:SetModel("models/props/de_nuke/crate_extrasmall.mdl")
+	-- giving  the amount of logistic to the client
+    self:SetNWInt("logisticAmountNato", self.crateLogistic)
+    -- the health
+    self:SetMaxHealth(2000)
+    self:SetHealth(2000)
+
+    self:SetModel("models/props/cs_militia/crate_extrasmallmill.mdl")
     self:PhysicsInit(SOLID_VPHYSICS) 
     self:SetMoveType(MOVETYPE_VPHYSICS)
     self:SetSolid(SOLID_VPHYSICS)
     
     local phys = self:GetPhysicsObject() 
     if phys:IsValid() then
-        phys:SetMass(250)
+    	-- setting the mass, more than 200 is sketchy because player cant pick
+        phys:SetMass(200)
         phys:Wake()
         phys:EnableGravity(true)
     end
     
     self.cooldown = 0
+    -- cooldown, you can change it like you want if you want the player to open slower or quicker
     self.cooldownTime = 1.5
+
+    -- waiting sometime for initialization
     timer.Simple(0.1, function()
         if IsValid(self) then
+        	-- sending the position to clients.
             local pos = self:GetPos()
-            net.Start("vectorOfSelf")
+            net.Start("crateVector")
                 net.WriteVector(pos)
             net.Broadcast()
         end
@@ -64,35 +80,41 @@ function ENT:Initialize()
 end
 
 function ENT:Use(activator, caller) 
-    if not IsValid(activator) or not activator:IsPlayer() then return end
+	-- preventing any probable errors
+    if not IsValid(activator) or not activator:IsPlayer() then return end 
 
     local curPos = self:GetPos()
+    -- you can change the distance to open the crate
     local distance = curPos:Distance(activator:GetPos())
-    local maxDistance = 65 -- Increased slightly; 50 is very small
+    local maxDistance = 75
 
+    -- distance, cooldown system
     if distance <= maxDistance then
         if CurTime() > self.cooldown then
-            self.cooldown = CurTime() + self.cooldownTime
-            
-            if self.crateLogistic > 0 then
-                net.Start("vectorOfSelf")
-                    net.WriteVector(curPos)
-                net.Broadcast()
+        	--you cant use it if you dont press ALT (slowwalk)
+        	if activator:KeyDown(262144) then
+	            self.cooldown = CurTime() + self.cooldownTime
+	            
+	            -- only can use if the logistic is still usable and not 0
+	            if self.crateLogistic > 0 then
+	                net.Start("crateVector")
+	                    net.WriteVector(curPos)
+	                net.Broadcast()
 
-                net.Start("alertPlayer")
-				    net.WriteEntity(self)
-				net.Send(activator)
+	                net.Start("callClient")
+					    net.WriteEntity(self)
+					net.Send(activator)
 
-                self:EmitSound("snd_jack_aidboxopen.ogg")
-            else
-                self:EmitSound("buttons/combine_button_locked.wav")
-            end
+	                self:EmitSound("snd_jack_aidboxopen.ogg")
+	            else
+	                self:EmitSound("buttons/combine_button_locked.wav")
+	            end
+	        end
         end
     end
 end
 
 function ENT:OnTakeDamage( dmginfo )
-
     local damage = dmginfo:GetDamage()
     self:SetHealth(self:Health() - damage)
     
@@ -118,7 +140,7 @@ function ENT:OnTakeDamage( dmginfo )
 		timer.Create(timerID1, 0.05, 26, function() 
 		    if IsValid(prop) then
 		        alpha = alpha - 15
-		        if alpha < 0 then alpha = 0 end -- Alpha eksiye düşmesin
+		        if alpha < 0 then alpha = 0 end
 		        
 		        prop:SetColor(Color(255, 255, 255, alpha))
 		        
@@ -131,13 +153,18 @@ function ENT:OnTakeDamage( dmginfo )
 		end)
 	end)
 
-    -- Ana sandık ölürse
     if self:Health() <= 0 or self.crateLogistic <= 0 then
         self:Remove()
     end
 
-    self.crateLogistic = self.crateLogistic - (dmginfo:GetDamage() / 6)
-    self:SetNWInt("LogiAmount", math.Round(self.crateLogistic))
+    self.crateLogistic = self.crateLogistic - (dmginfo:GetDamage() / 10)
+    self:SetNWInt("logisticAmountNato", math.Round(self.crateLogistic))
     
     if self.crateLogistic <= 0 then self:Remove() end
+end
+
+function ENT:SetLogisticAmountNato(amount)
+    self.crateLogistic = amount
+ 	self:SetNWInt("logisticAmountNato", math.Round(amount))
+    print(self:GetClass() .. " yeni lojistik amountı: " .. amount)
 end
