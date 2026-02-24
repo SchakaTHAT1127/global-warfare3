@@ -175,7 +175,7 @@ Long-range radio units for unit coordination and air support requests.
         btn.DoClick = function()
             local logisticAmountUssr = targetEntity:GetNWInt("logisticAmountUssr", 0)
             GW3.uiSound("button")
-            net.Start("logisticSendNewAmount_ussr")
+            net.Start("logisticSendNewAmountUssr")
                 net.WriteString(netString)
                 net.WriteVector(entLocation)
                 net.WriteEntity(targetEntity)

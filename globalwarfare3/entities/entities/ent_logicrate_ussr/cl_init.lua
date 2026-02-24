@@ -99,7 +99,7 @@ net.Receive("crateVector_ussr", function( len )
     print(logiLocation_ussr)
 end)
 -- worst name ever
-net.Receive("logisticSendNewAmount_ussr", function()
+net.Receive("logisticSendNewAmountUssr", function()
     -- reading the entity and the sended amount. then setting it.
     local targetEnt = net.ReadEntity()
     local amount = net.ReadInt(16)

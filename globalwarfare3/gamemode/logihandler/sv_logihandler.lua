@@ -1,12 +1,12 @@
 AddCSLuaFile("cl_logihandler.lua")
 AddCSLuaFile("globalwarfare3/gamemode/shared.lua")
 AddCSLuaFile("globalwarfare3/gamemode/vgui/cl_logipanel.lua")
-util.AddNetworkString("logisticSendNewAmount")
-util.AddNetworkString("logisticSendNewAmount_ussr")
+util.AddNetworkString("logisticSendNewAmountNato")
+util.AddNetworkString("logisticSendNewAmountUssr")
 
 GW3 = GW3 or {}
 
-net.Receive("logisticSendNewAmount_ussr", function(len, ply)
+net.Receive("logisticSendNewAmountUssr", function(len, ply)
     local wpn = net.ReadString()
     local sentPos = net.ReadVector()
     local targetEnt = net.ReadEntity() 
@@ -19,7 +19,7 @@ net.Receive("logisticSendNewAmount_ussr", function(len, ply)
 end)
 
 
-net.Receive("logisticSendNewAmount", function(len, ply)
+net.Receive("logisticSendNewAmountNato", function(len, ply)
     local wpn = net.ReadString()
     local sentPos = net.ReadVector()
     local targetEnt = net.ReadEntity() 
@@ -85,6 +85,36 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                         weapon:SetResource(50) 
                     elseif class == "ent_jack_gmod_ezmunitions" then
                         weapon:SetResource(10)
+                    else
+                    return end
+                end
+            else
+                -- Bakiye yetersizse burası çalışır
+                print("no money")
+            end
+        end
+    elseif team == 2 then
+        if IsValid(targetedentity) then
+            if logistic >= price then 
+                -- Satın alma işlemi başarılı
+                logistic = logistic - price
+                targetedentity:SetLogisticAmountUssr(logistic)
+                
+                print("succesful new logistic: " .. logistic)
+
+                local weapon = ents.Create(itemData.class)
+                if IsValid(weapon) then
+                    weapon:SetPos(sentPos + Vector(0, 0, 60))
+                    weapon:Spawn()
+                    weapon:Activate()
+
+                    local class = weapon:GetClass()
+                    
+                    -- Eşya tipine göre kaynak belirleme
+                    if class == "ent_jack_gmod_ezammo" then
+                        weapon:SetResource(50) 
+                    elseif class == "ent_jack_gmod_ezmunitions" then
+                        weapon:SetResource(10)
                     elseif class == "lvs_trailer_zis3" then
                         -- Buraya zis3 için özel bir kod gelecekse ekleyebilirsin
                         print("ZIS-3 spawned")
@@ -96,3 +126,4 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
             end
         end
     end
+end
