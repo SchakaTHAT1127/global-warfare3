@@ -1,0 +1,7 @@
+"Gamemode"
+{
+    "base"      "base"
+    "title"     "Global Warfare 3"
+    "maps"      "^gw_"
+    "menusystem" "1"
+}
