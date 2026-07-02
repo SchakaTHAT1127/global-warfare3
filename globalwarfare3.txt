@@ -1,0 +1,95 @@
+"globalwarfare3"
+{
+	"base" "base"
+	"title" "Global Warfare 3"
+	"maps" "^gw_"
+	"menusystem" "1"
+
+	"settings"
+	{
+		"1"
+		{
+			"name" "sv_ukrainetruckamount"
+			"text" "Ukraine Truck Amount:"
+			"type" "Numeric"
+			"default" "2"
+		}
+		"2"
+		{
+			"name" "sv_ukrainetruckcooldown"
+			"text" "Ukraine Truck Cooldown:"
+			"type" "Numeric"
+			"default" "180"
+		}
+		"3"
+		{
+			"name" "sv_ukrainecaramount"
+			"text" "Ukraine Car Amount:"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"4"
+		{
+			"name" "sv_ukrainecarcooldown"
+			"text" "Ukraine Car Cooldown:"
+			"type" "Numeric"
+			"default" "120"
+		}
+		"5"
+		{
+			"name" "sv_ukraineapcamount"
+			"text" "Ukraine APC Amount:"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"6"
+		{
+			"name" "sv_ukraineapccooldown"
+			"text" "Ukraine APC Cooldown:"
+			"type" "Numeric"
+			"default" "300"
+		}
+		"7"
+		{
+			"name" "sv_russiatruckamount"
+			"text" "Russia Truck Amount:"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"8"
+		{
+			"name" "sv_russiatruckcooldown"
+			"text" "Russia Truck Cooldown:"
+			"type" "Numeric"
+			"default" "180"
+		}
+		"9"
+		{
+			"name" "sv_russiacaramount"
+			"text" "Russia Car Amount:"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"10"
+		{
+			"name" "sv_russiacarcooldown"
+			"text" "Russia Car Cooldown:"
+			"type" "Numeric"
+			"default" "120"
+		}
+		"11"
+		{
+			"name" "sv_russiaapcamount"
+			"text" "Russia APC Amount:"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"12"
+		{
+			"name" "sv_russiaapccooldown"
+			"text" "Russia APC Cooldown:"
+			"type" "Numeric"
+			"default" "420"
+		}
+	}
+}
