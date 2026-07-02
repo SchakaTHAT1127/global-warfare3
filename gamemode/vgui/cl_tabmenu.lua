@@ -84,7 +84,9 @@ local function CreateBaseFrame(title, xPos, teamScoreNumb)
     frame.Paint = function(self, w, h)
         draw.RoundedBox(12, 0, 0, w, h, Color(25, 25, 25, 220))
         draw.SimpleText(title, "DermaDefaultBold", w/2, 15, color_white, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Ticket: "..team.GetScore(teamScoreNumb), "DermaDefaultBold", w/2, 35, color_white, TEXT_ALIGN_CENTER)
+        -- Dinamik olarak ticket değerini her frame'de al
+        local currentTicket = team.GetScore(teamScoreNumb)
+        draw.SimpleText("Ticket: "..currentTicket, "DermaDefaultBold", w/2, 35, color_white, TEXT_ALIGN_CENTER)
     end
 
     frame.Scroll = vgui.Create("DScrollPanel", frame)

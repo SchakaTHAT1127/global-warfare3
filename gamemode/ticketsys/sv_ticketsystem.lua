@@ -63,9 +63,25 @@ hook.Add("EntityRemoved", "GlobalWarfare_ManualRemoval", function(ent)
     HandleVehicleLoss(ent, rusVehicleList, RUS, "RUSticket")
 end)
 
+local function HandlePlayerDeath(ply, teamID, teamVarName)
+            
+    local currentTickets = _G[teamVarName] or 0
+    local newTickets = currentTickets - 2
+            
+    _G[teamVarName] = newTickets
+    team.SetScore(teamID, newTickets)
+            
+    print("[SİSTEM] Kalan Bilet: " .. newTickets)
+end
+
 hook.Add("PlayerDeath", "OyuncuOlunceTicketEksilt", function( victim, inflictor, attacker )
-    local victimTeam = victim:Team()
-    local victimTeamTicket = team.GetScore(victimTeam)
-    victimTeamTicket = victimTeamTicket - 2
-    team.SetScore(victimTeam, victimTeamTicket)
+    victimTeam = victim:Team()
+
+    if victimTeam == 1 then
+        teamTicket = "UKRticket"
+    elseif victimTeam == 2 then
+        teamTicket = "RUSticket"
+    end
+
+    HandlePlayerDeath(victim, victimTeam, teamTicket)
 end)
