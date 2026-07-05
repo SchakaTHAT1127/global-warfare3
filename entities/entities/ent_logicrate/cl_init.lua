@@ -13,7 +13,7 @@ hook.Add("HUDPaint", "DrawCrateHint_", function()
             local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
             if distance < 300 then
                 -- receving the logistic amount
-                logisticAmount = ent:GetNWInt("logisticAmountNato", 0) 
+                logisticAmount = ent:GetNWInt("logisticAmountUkr", 0) 
                 local worldPos = ent:GetPos() + Vector(0, 0,25)
                 local screenData = worldPos:ToScreen()
                 if screenData.visible then
@@ -99,7 +99,7 @@ net.Receive("crateVector", function( len )
     print(logiLocation)
 end)
 -- worst name ever
-net.Receive("logisticSendNewAmountNato", function()
+net.Receive("logisticSendNewAmountUkr", function()
     -- reading the entity and the sended amount. then setting it.
     local targetEnt = net.ReadEntity()
     local amount = net.ReadInt(16)

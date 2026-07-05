@@ -45,7 +45,7 @@ function ENT:Initialize()
 	-- the initial logistic amouınt
 	self.crateLogistic = 200
 	-- giving  the amount of logistic to the client
-    self:SetNWInt("logisticAmountNato", self.crateLogistic)
+    self:SetNWInt("logisticAmountUkr", self.crateLogistic)
     -- the health
     self:SetMaxHealth(2000)
     self:SetHealth(2000)
@@ -158,13 +158,13 @@ function ENT:OnTakeDamage( dmginfo )
     end
 
     self.crateLogistic = self.crateLogistic - (dmginfo:GetDamage() / 10)
-    self:SetNWInt("logisticAmountNato", math.Round(self.crateLogistic))
+    self:SetNWInt("logisticAmountUkr", math.Round(self.crateLogistic))
     
     if self.crateLogistic <= 0 then self:Remove() end
 end
 
-function ENT:SetLogisticAmountNato(amount)
+function ENT:SetLogisticAmountUkr(amount)
     self.crateLogistic = amount
- 	self:SetNWInt("logisticAmountNato", math.Round(amount))
+ 	self:SetNWInt("logisticAmountUkr", math.Round(amount))
     print(self:GetClass() .. " yeni lojistik amountı: " .. amount)
 end

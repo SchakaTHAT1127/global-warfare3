@@ -1,3 +1,4 @@
+-- Dahil ediyoruz
 include("shared.lua")
 include("globalwarfare3/gamemode/vgui/cl_logipanel_ussr.lua")
 include("globalwarfare3/gamemode/logihandler/cl_logihandler.lua")
@@ -6,14 +7,14 @@ function ENT:Draw()
     self:DrawModel()
 end
 
--- this code makes you see the information in person
+-- Bilgileri görmeni sağlayan şey
 hook.Add("HUDPaint", "DrawCrateHint_3", function()
     for _, ent in ipairs(ents.FindByClass("ent_logicrate_ussr")) do
         if IsValid(ent) then
             local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
             if distance < 300 then
                 -- receving the logistic amount
-                logisticAmountUssr = ent:GetNWInt("logisticAmountUssr", 0) 
+                logisticAmountRus = ent:GetNWInt("logisticAmountRus", 0) 
                 local worldPos = ent:GetPos() + Vector(0, 0,25)
                 local screenData = worldPos:ToScreen()
                 if screenData.visible then
@@ -21,15 +22,16 @@ hook.Add("HUDPaint", "DrawCrateHint_3", function()
                     draw.RoundedBox(4, x-120, y - 13, 240, 25, Color(0, 0, 0, 150))
                     draw.SimpleText("Russian Logistics Crate", "TargetID", x, y, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                     draw.RoundedBox(4, x-90, y+23, 180, 25, Color(236,67,61,150))
-                    draw.SimpleText("Amount: " .. logisticAmountUssr, "TargetID", x, y + 36, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                    draw.SimpleText("Amount: " .. logisticAmountRus, "TargetID", x, y + 36, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                     draw.SimpleText("Press Walk (ALT) + Use", "LabelHud1", x, y + 60, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
                 end
             end
         end
     end
 end)
+
 -- the logistic menu frame, the panel code located in cl_logipanel
-function logisticMenuStartUssr(targetEntity)
+function logisticMenuStartRus(targetEntity)
 
     logisticMenu = vgui.Create("DFrame")
     logisticMenu:SetPos(100, 100)
@@ -59,7 +61,8 @@ function logisticMenuStartUssr(targetEntity)
         surface.SetDrawColor(125, 125, 125, 5) 
         surface.DrawRect(0, 20, w, h - 20)
     end
-    -- tab colors , if active etc.  
+
+    -- Aktifse renk değiş falan filan
     local oldAddSheet = lSheet.AddSheet
     function lSheet:AddSheet(label, panel, material, ...)
         local sheet = oldAddSheet(self, label, panel, material, ...)
@@ -82,24 +85,25 @@ function logisticMenuStartUssr(targetEntity)
     end
 
     lSheet:AddSheet("   Logistic Crate   ", logiPanel, "icon16/report.png")
-    print("benim cl_init, aldığım miktar;" ..logisticAmountUssr)
+    print("benim cl_init, aldığım miktar;" ..logisticAmountRus)
 
-    -- calling the panel code, i use this for no spagetti code
-    GW3.logiPanelMenuUSSR(logiPanel, logiLocation_ussr, targetEntity, logisticAmountUssr)
+    -- Panel kodunu çağırıyom karmançorman olmasın diye paneli oraya aktardım
+    GW3.logiPanelMenuRus(logiPanel, logiLocation_rus, targetEntity, logisticAmountRus)
 end
 
-net.Receive("callClient_ussr", function()
+net.Receive("callClient_rus", function()
     -- receiving entity id etc. and sending it to the func
     local targetEnt = net.ReadEntity()
-    logisticMenuStartUssr(targetEnt)
+    logisticMenuStartRus(targetEnt)
 end)
-net.Receive("crateVector_ussr", function( len )
+net.Receive("crateVector_rus", function( len )
     -- receving the vector
-    logiLocation_ussr = net.ReadVector()
-    print(logiLocation_ussr)
+    logiLocation_rus = net.ReadVector()
+    print(logiLocation_rus)
 end)
+
 -- worst name ever
-net.Receive("logisticSendNewAmountUssr", function()
+net.Receive("logisticSendNewAmountRus", function()
     -- reading the entity and the sended amount. then setting it.
     local targetEnt = net.ReadEntity()
     local amount = net.ReadInt(16)

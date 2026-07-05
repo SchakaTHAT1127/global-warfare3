@@ -4,8 +4,8 @@ AddCSLuaFile("globalwarfare3/gamemode/vgui/cl_logipanel_ussr.lua")
 include("globalwarfare3/gamemode/logihandler/sv_logihandler.lua")
 include("shared.lua")
 
-util.AddNetworkString("callClient_ussr")
-util.AddNetworkString("crateVector_ussr")
+util.AddNetworkString("callClient_rus")
+util.AddNetworkString("crateVector_rus")
 --[[
 these are the props, when ent gets damaged a random prop will be selected from here
 ]]
@@ -45,7 +45,7 @@ function ENT:Initialize()
 	-- the initial logistic amouınt
 	self.crateLogistic = 200
 	-- giving  the amount of logistic to the client
-    self:SetNWInt("logisticAmountUssr", self.crateLogistic)
+    self:SetNWInt("logisticAmountRus", self.crateLogistic)
     -- the health
     self:SetMaxHealth(2000)
     self:SetHealth(2000)
@@ -72,7 +72,7 @@ function ENT:Initialize()
         if IsValid(self) then
         	-- sending the position to clients.
             local pos = self:GetPos()
-            net.Start("crateVector_ussr")
+            net.Start("crateVector_rus")
                 net.WriteVector(pos)
             net.Broadcast()
         end
@@ -97,11 +97,11 @@ function ENT:Use(activator, caller)
 
 	            -- only can use if the logistic is still usable and not 0
 	            if self.crateLogistic > 0 then
-	                net.Start("crateVector_ussr")
+	                net.Start("crateVector_rus")
 	                    net.WriteVector(curPos)
 	                net.Broadcast()
 
-	                net.Start("callClient_ussr")
+	                net.Start("callClient_rus")
 					    net.WriteEntity(self)
 					net.Send(activator)
 
@@ -158,13 +158,13 @@ function ENT:OnTakeDamage( dmginfo )
     end
 
     self.crateLogistic = self.crateLogistic - (dmginfo:GetDamage() / 10)
-    self:SetNWInt("logisticAmountUssr", math.Round(self.crateLogistic))
+    self:SetNWInt("logisticAmountRus", math.Round(self.crateLogistic))
     
     if self.crateLogistic <= 0 then self:Remove() end
 end
 
-function ENT:SetLogisticAmountUssr(amount)
+function ENT:SetLogisticAmountRus(amount)
     self.crateLogistic = amount
- 	self:SetNWInt("logisticAmountUssr", math.Round(amount))
+ 	self:SetNWInt("logisticAmountRus", math.Round(amount))
     print(self:GetClass() .. " yeni lojistik amountı: " .. amount)
 end

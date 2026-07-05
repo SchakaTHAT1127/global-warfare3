@@ -1,3 +1,4 @@
+-- Client kodlarını ekliyoruz
 include("shared.lua")
 include("vgui/cl_menu.lua")
 include("vgui/cl_teampanel.lua")
@@ -5,7 +6,7 @@ include("vgui/cl_tabmenu.lua")
 include("sounds/cl_soundpr.lua")
 include("logihandler/cl_logihandler.lua")
 
--- These are some usefull presets i made back in the day always usefull dont delete
+-- Fontlar.
 surface.CreateFont( "LabelHud1S", {
 	font = "Arial",
 	extended = false,

@@ -1,6 +1,6 @@
 if CLIENT then return end
 
--- Ukrayna
+-- convarlar listesi - ukrayna
 sv_ukrainetruckamount   = CreateConVar("sv_ukrainetruckamount", "2", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Ukraine Truck Amount")
 sv_ukrainetruckcooldown = CreateConVar("sv_ukrainetruckcooldown", "180", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Ukraine Truck Cooldown")
 

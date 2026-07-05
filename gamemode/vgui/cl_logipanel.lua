@@ -21,84 +21,87 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     local DynamicFont = "MenuSelectHud2"
     local DynamicLabelFont = "LabelHud1"
 
-    -- The descriptions
-local descTable = {
-        ["assault"] = [[
-Cost: 20, Infantry Rifles;
-Standard issue automatic rifle for frontline combat operations.
-        ]],
-        ["machinegun"] = [[
-Cost: 30, Automatic Weapons;
-High-rate-of-fire weapons designed for suppression and sustained heavy fire.
-        ]],
-        ["sniper"] = [[
-Cost: 25, Marksman Rifles;
-High-caliber bolt-action rifles for long-range engagement.
-        ]],
-        ["antitank"] = [[
-Cost: 40, Anti-Armor Weaponry;
-Specialized launchers and projectiles designed to neutralize armored vehicles.
-        ]],
-        ["artillery1"] = [[
-Cost: 50, Small Barrel Artillery;
-Lightweight, mobile indirect fire support system for mid-range strikes.
-        ]],
-        ["misc"] = [[
-Cost: 80, Placed Heavy Machinegun;
-A placeble Heavy Machinegun that can penatrate armored vehicles.
-        ]],
-        ["ammo"] = [[
-Cost: 60, Standard Ammunition;
-Ammunition for weapons.
-        ]],
-        ["rocketammo"] = [[
-Cost: 50, Explosive Projectiles;
-Rockets for rocket launchers.
-        ]],
-        ["bandage"] = [[
-Cost: 5, Field Dressing and Hemostatics;
-Basic medical supplies used to stop bleeding and protect open wounds.
-        ]],
-        ["splint"] = [[
-Cost: 5, Trauma and Fracture Support;
-Medical devices used to immobilize fractured limbs during field extraction.
-        ]],
-        ["ointment"] = [[
-Cost: 5, Topical Medical Treatments;
-Antiseptic creams and ointments for treating burns and preventing infection.
-        ]],
-        ["surgerykit"] = [[
-Cost: 10, Advanced Field Surgical Kit;
-Professional tools for invasive procedures and shrapnel removal in the field.
-        ]],
-        ["grenade"] = [[
-Cost: 15, Fragmentation and High Explosives;
-Hand-thrown anti-personnel explosives for clearing rooms or trenches.
-        ]],
-        ["smoke"] = [[
-Cost: 10, Visual Obscuration Devices;
-Canisters designed to create smoke screens for concealment and signaling.
-        ]],
-        ["flash"] = [[
-Cost: 10, Non-Lethal Stun Munitions;
-Tactical devices used to temporarily disorient targets with light and sound.
-        ]],
-        ["satchel"] = [[
-Cost: 80, Demolition Satchel Charges;
-Portable heavy explosive packs used for destroying structures and obstacles.
-        ]],
-        ["c4"] = [[
-Cost: 70, Plastic Explosive Compounds;
-Stable, high-velocity explosives typically used with timers.
-        ]],
-        ["tnt"] = [[
-Cost: 70, Standard Demolition Blocks;
-Traditional explosive material used for sabotage, can explode in diffrent times..
-        ]],
-        ["radio"] = [[
-Cost: 25, Tactical Communication Systems;
-Long-range radio units for unit coordination and air support requests.
-        ]]
+    local descTable = {
+                ["assault"] = [[
+        Cost: 20, AK74M;
+        It is a modern Russian standard-issue rifle with a caliber of 5.45mm
+                ]],
+                ["machinegun"] = [[
+        Cost: 25, PKM;
+        It is a lightweight, durable, belt-fed general-purpose machine gun.
+                ]],
+                ["sniper"] = [[
+        Cost: 20, SVD Dragunov;
+        It is a semi-automatic designated marksman rifle (DMR) designed to extend range to squad-level distances.
+                ]],
+                ["antitank"] = [[
+        Cost: 65, RPG-7;
+        Specialized launchers and projectiles designed to neutralize armored vehicles.
+                ]],
+                ["artillery1"] = [[
+        Cost: 80, Medium Barrel Artillery;
+        Mobile indirect fire support system for mid-long-range strikes.
+                ]],
+                ["misc"] = [[
+        Cost: 170, Big Barrel Artilery;
+        Mobile but Heavy weighted indirect fire support system for long-range strikes, Can penetrate everything.
+                ]],
+                ["ammo"] = [[
+        Cost: 60, Ammo Box;
+        It has ammos for weapons.
+                ]],
+                ["rocketammo"] = [[
+        Cost: 48, Munition;
+        It has rockets for rocket launchers.
+                ]],
+                ["bandage"] = [[
+        Cost: 5, Field Bandage;
+        It is a basic bandage used to stop bleeding.
+                ]],
+                ["splint"] = [[
+        Cost: 5, Field Splint;
+        It is a medical device used to stabilize a broken bone.
+                ]],
+                ["ointment"] = [[
+        Cost: 5, Burn Ointment
+        It is a cream that relieves burn pain (Only IRL lol) and prevents infection.
+                ]],
+                ["surgerykit"] = [[
+        Cost: 10, Field Surgical Kit;
+        It is a medical kit for treating severe injuries and damaged internal organs.
+                ]],
+                ["grenade"] = [[
+        Cost: 15, Hand Grenade;
+        It is a Anti-personnel grenade used for clearing rooms or trenches.
+                ]],
+                ["smoke"] = [[
+        Cost: 10, Smoke Grenade;
+        It is a grenade that releases smoke
+                ]],
+                ["flash"] = [[
+        Cost: 10, Flash Grenade;
+        It is a grenade used to stunt enemy's
+                ]],
+                ["satchel"] = [[
+        Cost: 90, Satchel Charges;
+        Heavy explosive packs that can be activated from far away, Extremely lethal.
+                ]],
+                ["c4"] = [[
+        Cost: 80, C4;
+        Heavy explosive that uses timers to explode.
+                ]],
+                ["tnt"] = [[
+        Cost: 80, TNT;
+        Heavy explosive that activated by a fuse.
+                ]],
+                ["radio"] = [[
+        Cost: 15, Radio Set;
+        Long-range radio units for unit coordination.
+                ]],
+                ["carbine"] = [[
+        Cost: 15, AKSU-74;
+        It is a shortened AK-74, not quite prefered.
+                ]]
     }
     -- changes the font by looking at the res v1
     local screenSettings = {
@@ -172,9 +175,9 @@ Long-range radio units for unit coordination and air support requests.
         btn:Dock(TOP)
         btn:DockMargin(0, 0, 0, 5)
         btn.DoClick = function()
-            local logisticAmount = targetEntity:GetNWInt("logisticAmountNato", 0)
+            local logisticAmount = targetEntity:GetNWInt("logisticAmountUkr", 0)
             GW3.uiSound("button")
-            net.Start("logisticSendNewAmountNato")
+            net.Start("logisticSendNewAmountUkr")
                 net.WriteString(netString)
                 net.WriteVector(entLocation)
                 net.WriteEntity(targetEntity)
@@ -196,7 +199,7 @@ Long-range radio units for unit coordination and air support requests.
     -----------------------------------------------------
     local DWeapons = vgui.Create( "DCollapsibleCategory", panel )
     DWeapons:SetLabel("") 
-    DWeapons:SetPos(wide * 0.05, tall * 0.05)
+    DWeapons:SetPos(wide * 0.05, tall * 0.02)
     DWeapons:SetSize(categoryWide, categoryTall)
     DWeapons:SetExpanded(false)
 
@@ -230,13 +233,15 @@ Long-range radio units for unit coordination and air support requests.
     AddLabel(ListWeapons, descTable["machinegun"], 50, 100, categoryWide,tall)
     AddLogiButton(ListWeapons, "Anti-Tank Rocket Launcher", "antitank")
     AddLabel(ListWeapons, descTable["antitank"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Carbine", "carbine")
+    AddLabel(ListWeapons, descTable["carbine"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- AMMO CATEGORY
     -----------------------------------------------------
     local DAmmos = vgui.Create( "DCollapsibleCategory", panel )
     DAmmos:SetLabel("") 
-    DAmmos:SetPos(wide * 0.125 + categoryWide, tall * 0.05)
+    DAmmos:SetPos(wide * 0.05, tall * 0.68)
     DAmmos:SetSize(categoryWide, categoryTall)
     DAmmos:SetExpanded(false)
 
@@ -300,7 +305,7 @@ Long-range radio units for unit coordination and air support requests.
 
     AddLogiButton(ListMisc, "Medium Barrel Artillery", "artillery1")
     AddLabel(ListMisc, descTable["artillery1"], 50, 100, categoryWide,tall)
-    AddLogiButton(ListMisc, "Long-Barreled Artillery", "artillery2")
+    AddLogiButton(ListMisc, "Long-Barreled Artillery", "misc")
     AddLabel(ListMisc, descTable["misc"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Radio Kit Crate", "radio")
     AddLabel(ListMisc, descTable["radio"], 50, 100, categoryWide,tall)
@@ -388,7 +393,7 @@ Long-range radio units for unit coordination and air support requests.
     -----------------------------------------------------
     local DExplosive = vgui.Create( "DCollapsibleCategory", panel )
     DExplosive:SetLabel("") 
-    DExplosive:SetPos(wide * 0.05, tall * 0.50)
+    DExplosive:SetPos(wide * 0.125 + categoryWide, tall * 0.02)
     DExplosive:SetSize(categoryWide, categoryTall)
     DExplosive:SetExpanded(false)
 

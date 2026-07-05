@@ -5,16 +5,16 @@ function GW3.teamPanelMenu(parentPanel)
     local panel = parentPanel
 
     local scale = ScrW() * 0.3 
-    local imgW, imgH = 1100, 600 -- this is the images scale
+    local imgW, imgH = 1100, 600 -- Takım bayrak resimlerinin büyüklüğü 
     local aspect = imgH / imgW
 
     local nW = scale
     local nH = nW * aspect
 
-    local sW = scale -- original scale
+    local sW = scale
     local sH = sW * aspect
 
-    local btnW = imgW -- make the buttons and images same wide
+    local btnW = imgW -- Buton ve resmin genişliğini aynı yaptım
 
     local DermaButton = vgui.Create( "DButton", panel)
     DermaButton:SetText( "" ) 
@@ -22,10 +22,10 @@ function GW3.teamPanelMenu(parentPanel)
     DermaButton:SetSize(nW, 30)
     DermaButton.DoClick = function()
         net.Start( "SendTeam" )
-            net.WriteUInt(1,2) -- This is ukraine
+            net.WriteUInt(1,2) -- UKR (1), 2 BIT
         net.SendToServer()
         GW3.uiSound("button")
-        GW3.uiSound("team")
+        GW3.uiSound("team") -- sesleri oynatıyoz
     end
     DermaButton.Paint = function(self, w, h)
         surface.SetDrawColor(8, 8, 8, 215)
@@ -49,11 +49,11 @@ function GW3.teamPanelMenu(parentPanel)
 
     local DermaButton = vgui.Create("DButton", panel) 
     DermaButton:SetText("")
-    DermaButton:SetPos(ScrW() * 0.75 - (sW / 2), ScrH() / 2.5 - (sH / 2) + sH + 12) -- works good i see
+    DermaButton:SetPos(ScrW() * 0.75 - (sW / 2), ScrH() / 2.5 - (sH / 2) + sH + 12) -- Hiçbir fikrim yok
     DermaButton:SetSize(nW, 30)
     DermaButton.DoClick = function()
         net.Start( "SendTeam" )
-            net.WriteUInt(2,2) -- This is russia
+            net.WriteUInt(2,2) -- RUS (2), 2 BIT
         net.SendToServer()  
         GW3.uiSound("button")
         GW3.uiSound("team")
@@ -81,16 +81,17 @@ function GW3.teamPanelMenu(parentPanel)
     local imgW, imgH = 1100, 600
     local aspect = imgH / imgW
 
-    -- NATO
-    local nato = vgui.Create("DImage", panel)
-    nato:SetSize(nW, nH)    
-    nato:SetPos(ScrW() * 0.25 - (nW / 2), ScrH() / 2.5 - (nH / 2))
+    -- ukrayna resim
+    local ukr = vgui.Create("DImage", panel)
+    ukr:SetSize(nW, nH)    
+    ukr:SetPos(ScrW() * 0.25 - (nW / 2), ScrH() / 2.5 - (nH / 2))
 
-    -- SOVIET
-    local soviet = vgui.Create("DImage", panel)
-    soviet:SetSize(sW, sH)
-    soviet:SetPos(ScrW() * 0.75 - (sW / 2), ScrH() / 2.5 - (sH / 2))
+    -- rusya resim
+    local rus = vgui.Create("DImage", panel)
+    rus:SetSize(sW, sH)
+    rus:SetPos(ScrW() * 0.75 - (sW / 2), ScrH() / 2.5 - (sH / 2))
 
+    -- Aşağıdakilerde karanlık hissi versin diye vignet
     wideVignet = panel:GetWide()
     tallVignet = panel:GetTall()
 
@@ -102,9 +103,9 @@ function GW3.teamPanelMenu(parentPanel)
     vigmid:SetPos(ScrW()/2.25,ScrH()-ScrH())
     vigmid:SetSize(ScrW()/10, ScrH()) 
 
-    soviet:SetImage("gamemodes/globalwarfare3/materials/russian.png")
-    nato:SetImage("gamemodes/globalwarfare3/materials/ukraine.png")
-    --vignet and vigmid is just vignette efects
+    rus:SetImage("gamemodes/globalwarfare3/materials/russian.png")
+    ukr:SetImage("gamemodes/globalwarfare3/materials/ukraine.png")
+
     vignet:SetImage("gamemodes/globalwarfare3/materials/vignet.png")
     vigmid:SetImage("gamemodes/globalwarfare3/materials/lalali.png")
 
