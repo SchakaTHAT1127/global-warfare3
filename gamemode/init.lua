@@ -5,6 +5,7 @@ AddCSLuaFile("vgui/cl_teampanel.lua")
 AddCSLuaFile("vgui/cl_tabmenu.lua")
 AddCSLuaFile("sounds/cl_soundpr.lua")
 AddCSLuaFile("logihandler/cl_logihandler.lua")
+AddCSLuaFile("capturesys/cl_capturesys.lua")
 AddCSLuaFile("shared.lua")
 
 include("logihandler/sv_logihandler.lua")
@@ -12,9 +13,10 @@ include("shared.lua")
 include("player/playercustomization.lua")
 include("vgui/sv_menu.lua")
 include("cvars.lua")
+include("capturesys/sv_capturesys.lua")
 
-include("vehiclespawn/sv_apc.lua")
---include("vehiclespawn/sv_heli.lua")
+include("vehiclespawn/sv_ukraine_arac_spawn.lua")
+include("vehiclespawn/sv_russia_arac_spawn.lua")
 
 include("ticketsys/sv_ticketsystem.lua")
 
@@ -51,7 +53,7 @@ cv_zirhliMiktarRus = GetConVar("sv_russiaapcamount")
 cv_zirhliCooldownRus = GetConVar("sv_russiaapccooldown")
 
 entAraclarRusya = {
-    ["kamyon"] = { class = "sw_ural4320", getMiktar = function() return cv_kamyonMiktarRus:GetInt() end, getCooldown = function() return cv_kamyonCooldownRus:GetInt() end, ticket = 12 },
+    ["kamyon"] = { class = "sw_ural4320", getMiktar = function() return cv_kamyonMiktarRus:GetInt() end, getCooldown = function() return cv_kamyonCooldownRus:GetInt() end, ticket = 15 },
     ["transport"] = { class = "sw_gaz2330", getMiktar = function() return cv_transportMiktarRus:GetInt() end, getCooldown = function() return cv_transportCooldownRus:GetInt() end, ticket = 12 },
     ["zirhli"] = { class = "sw_btr82", getMiktar = function() return cv_zirhliMiktarRus:GetInt() end, getCooldown = function() return cv_zirhliCooldownRus:GetInt() end, ticket = 30 }
 }

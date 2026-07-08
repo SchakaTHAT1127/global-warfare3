@@ -5,6 +5,7 @@ include("vgui/cl_teampanel.lua")
 include("vgui/cl_tabmenu.lua")
 include("sounds/cl_soundpr.lua")
 include("logihandler/cl_logihandler.lua")
+include("capturesys/cl_capturesys.lua")
 
 -- Fontlar.
 surface.CreateFont( "LabelHud1S", {

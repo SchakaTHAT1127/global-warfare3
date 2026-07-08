@@ -20,7 +20,7 @@ local function HandleVehicleLoss(ent, list, teamID, teamVarName)
             print("[SİSTEM] Araç İmha Edildi: " .. name)
             print("[SİSTEM] Kalan Bilet: " .. newTickets)
 
-            hook.Run("AraçPatladı", entClass, teamID)
+            hook.Run("AracPatladi", data.class, teamID)
             break
         end
     end
@@ -55,7 +55,7 @@ local function HandlePlayerDeath(ply, teamID, teamVarName)
     _G[teamVarName] = newTickets
     team.SetScore(teamID, newTickets)
             
-    print("[SİSTEM] Kalan Bilet: " .. newTickets)
+    print("[SİSTEM] Oyuncu Öldü Kalan Bilet: " .. newTickets)
 end
 
 hook.Add("PlayerDeath", "OyuncuOlunceTicketEksilt", function( victim, inflictor, attacker )

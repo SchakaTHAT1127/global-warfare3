@@ -144,8 +144,3 @@ hook.Add("InitPostEntity", "some_unique_name", function()
         end)
     end
 end)
-
-timer.Create("test12", 0.5, 0, function()
-    print(team.GetScore(1))
-    print(team.GetScore(2))
-end)

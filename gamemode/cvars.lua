@@ -20,3 +20,25 @@ sv_russiacarcooldown    = CreateConVar("sv_russiacarcooldown", "120", { FCVAR_AR
 
 sv_russiaapcamount      = CreateConVar("sv_russiaapcamount", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia APC Amount")
 sv_russiaapccooldown    = CreateConVar("sv_russiaapccooldown", "420", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia APC Cooldown")
+
+-- ConVar'ları tanımlayalım (Eğer oyun modu veya başka bir yer önceden tanımlamadıysa)
+local cvarA = CreateConVar("sv_gwar_mod_a", "0", FCVAR_ARCHIVE)
+local cvarB = CreateConVar("sv_gwar_mod_b", "0", FCVAR_ARCHIVE)
+
+-- Mod A değiştiğinde çalışacak kod
+cvars.AddChangeCallback("sv_gwar_mod_a", function(convar_name, value_old, value_new)
+    -- Eğer Mod A aktif edildiyse (1 yapıldıysa) ve Mod B de o an aktifse
+    if tostring(value_new) == "1" and cvarB:GetBool() then
+        RunConsoleCommand("sv_gwar_mod_b", "0") -- Mod B'yi kapat
+        print("[Global Warfare 3] Mod A aktif edildi, Mod B deaktif duruma getirildi.")
+    end
+end, "GWar3_ModA_Callback")
+
+-- Mod B değiştiğinde çalışacak kod
+cvars.AddChangeCallback("sv_gwar_mod_b", function(convar_name, value_old, value_new)
+    -- Eğer Mod B aktif edildiyse (1 yapıldıysa) ve Mod A de o an aktifse
+    if tostring(value_new) == "1" and cvarA:GetBool() then
+        RunConsoleCommand("sv_gwar_mod_a", "0") -- Mod A'yı kapat
+        print("[Global Warfare 3] Mod B aktif edildi, Mod A deaktif duruma getirildi.")
+    end
+end, "GWar3_ModB_Callback")

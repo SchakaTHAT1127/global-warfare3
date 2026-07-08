@@ -91,5 +91,27 @@
 			"type" "Numeric"
 			"default" "420"
 		}
+		
+		"13"
+		{
+			"name" "sv_classicpointcapture"
+			"text" "Classic Point Capture (If this is 1, other mods MUST remain 0):"
+			"type" "Numeric"
+			"default" "1"
+		}
+		"14"
+		{
+			"name" "sv_pointticketfarm"
+			"text" "Point Ticket Farm (If this is 1, other mods MUST remain 0):"
+			"type" "Numeric"
+			"default" "0"
+		}
+                "15"
+		{
+			"name" "sv_nopoints"
+			"text" "No points (If this is 1, other mods MUST remain 0):"
+			"type" "Numeric"
+			"default" "0"
+		}
 	}
 }
