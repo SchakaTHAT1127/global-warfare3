@@ -21,24 +21,24 @@ sv_russiacarcooldown    = CreateConVar("sv_russiacarcooldown", "120", { FCVAR_AR
 sv_russiaapcamount      = CreateConVar("sv_russiaapcamount", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia APC Amount")
 sv_russiaapccooldown    = CreateConVar("sv_russiaapccooldown", "420", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia APC Cooldown")
 
--- ConVar'ları tanımlayalım (Eğer oyun modu veya başka bir yer önceden tanımlamadıysa)
-local cvarA = CreateConVar("sv_gwar_mod_a", "0", FCVAR_ARCHIVE)
-local cvarB = CreateConVar("sv_gwar_mod_b", "0", FCVAR_ARCHIVE)
+sv_russiaticket    = CreateConVar("sv_russiaticket", "100", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Ticket Amount")
+sv_ukraineticket    = CreateConVar("sv_ukraineticket", "100", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Ukraine Ticket Amount")
 
--- Mod A değiştiğinde çalışacak kod
-cvars.AddChangeCallback("sv_gwar_mod_a", function(convar_name, value_old, value_new)
-    -- Eğer Mod A aktif edildiyse (1 yapıldıysa) ve Mod B de o an aktifse
-    if tostring(value_new) == "1" and cvarB:GetBool() then
-        RunConsoleCommand("sv_gwar_mod_b", "0") -- Mod B'yi kapat
-        print("[Global Warfare 3] Mod A aktif edildi, Mod B deaktif duruma getirildi.")
-    end
-end, "GWar3_ModA_Callback")
+sv_conquest = CreateConVar("sv_conquest", "1", FCVAR_ARCHIVE)
+sv_resourcecontrol = CreateConVar("sv_resourcecontrol", "0", FCVAR_ARCHIVE)
+sv_teamelimination = CreateConVar("sv_teamelimination", "0", FCVAR_ARCHIVE)
 
--- Mod B değiştiğinde çalışacak kod
-cvars.AddChangeCallback("sv_gwar_mod_b", function(convar_name, value_old, value_new)
-    -- Eğer Mod B aktif edildiyse (1 yapıldıysa) ve Mod A de o an aktifse
-    if tostring(value_new) == "1" and cvarA:GetBool() then
-        RunConsoleCommand("sv_gwar_mod_a", "0") -- Mod A'yı kapat
-        print("[Global Warfare 3] Mod B aktif edildi, Mod A deaktif duruma getirildi.")
+local function convarModDegisici()
+    if sv_conquest:GetInt() == 1 then
+        sv_resourcecontrol:SetInt(0)
+        sv_teamelimination:SetInt(0)
+    elseif sv_resourcecontrol:GetInt() == 1 then
+        sv_conquest:SetInt(0)
+        sv_teamelimination:SetInt(0)
+    elseif sv_teamelimination:GetInt() == 1 then
+        sv_conquest:SetInt(0)
+        sv_resourcecontrol:SetInt(0)
     end
-end, "GWar3_ModB_Callback")
+    print("convarModDegisici")
+end
+convarModDegisici()

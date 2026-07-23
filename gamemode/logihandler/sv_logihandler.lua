@@ -87,7 +87,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     if class == "ent_jack_gmod_ezammo" then
                         weapon:SetResource(35) 
                     elseif class == "ent_jack_gmod_ezmunitions" then
-                        weapon:SetResource(48)
+                        weapon:SetResource(32)
                     else
                     return end
                 end
@@ -116,7 +116,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     if class == "ent_jack_gmod_ezammo" then
                         weapon:SetResource(35) 
                     elseif class == "ent_jack_gmod_ezmunitions" then
-                        weapon:SetResource(48)
+                        weapon:SetResource(32)
                     else
                     return end
                 end

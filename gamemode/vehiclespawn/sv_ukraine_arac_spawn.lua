@@ -12,7 +12,7 @@ entAraclarUkrayna = {
 local SunucuMapi = game.GetMap()
 
 local MaplerVeKoordinatlar = {
-    ["gw_peremen3"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
+    ["wid_peremen"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
     ["prm_hrabske"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
     ["prm_molodoy"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) }
 }

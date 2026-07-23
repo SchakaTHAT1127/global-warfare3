@@ -6,11 +6,12 @@ AddCSLuaFile("vgui/cl_tabmenu.lua")
 AddCSLuaFile("sounds/cl_soundpr.lua")
 AddCSLuaFile("logihandler/cl_logihandler.lua")
 AddCSLuaFile("capturesys/cl_capturesys.lua")
+AddCSLuaFile("player/cl_playercustomization.lua")
 AddCSLuaFile("shared.lua")
 
 include("logihandler/sv_logihandler.lua")
 include("shared.lua") 
-include("player/playercustomization.lua")
+include("player/sv_playercustomization.lua")
 include("vgui/sv_menu.lua")
 include("cvars.lua")
 include("capturesys/sv_capturesys.lua")
@@ -28,16 +29,13 @@ DeriveGamemode("sandbox")
 UKR = 1
 RUS = 2
 
--- Ticket variablesini oluşturuyoruz ve bi sayı veriyoruz
-UKRticket = 100
-RUSticket = 100
-
 cv_kamyonMiktarUkr = GetConVar("sv_ukrainetruckamount")
 cv_kamyonCooldownUkr = GetConVar("sv_ukrainetruckcooldown")
 cv_transportMiktarUkr = GetConVar("sv_ukrainecaramount")
 cv_transportCooldownUkr = GetConVar("sv_ukrainecarcooldown")
 cv_zirhliMiktarUkr = GetConVar("sv_ukraineapcamount")
 cv_zirhliCooldownUkr = GetConVar("sv_ukraineapccooldown")
+
 
 entAraclarUkrayna = {
     ["kamyon"] = { class = "sw_gaz66", getMiktar = function() return cv_kamyonMiktarUkr:GetInt() end, getCooldown = function() return cv_kamyonCooldownUkr:GetInt() end, ticket = 10 },
@@ -57,6 +55,12 @@ entAraclarRusya = {
     ["transport"] = { class = "sw_gaz2330", getMiktar = function() return cv_transportMiktarRus:GetInt() end, getCooldown = function() return cv_transportCooldownRus:GetInt() end, ticket = 12 },
     ["zirhli"] = { class = "sw_btr82", getMiktar = function() return cv_zirhliMiktarRus:GetInt() end, getCooldown = function() return cv_zirhliCooldownRus:GetInt() end, ticket = 30 }
 }
+
+cv_ticketUkr = GetConVar("sv_ukraineticket")
+cv_ticketRus = GetConVar("sv_russiaticket")
+
+UKRticket = cv_ticketUkr:GetInt()
+RUSticket = cv_ticketRus:GetInt()
 
 -- Takımlar:
 team.SetUp(UKR, "Ukrainian Ground Forces", Color(0, 33, 203))
@@ -113,8 +117,12 @@ end )
 
 hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikten sonra ticketleri tekrar setliyoruz, ve her takıma score olarak ticketleri koyuyoruz. 
     print("InitPostEntity")
-    UKRticket = 100
-    RUSticket = 100
+    UKRticket = cv_ticketUkr:GetInt()
+    RUSticket = cv_ticketRus:GetInt()
     team.SetScore(1, UKRticket)
     team.SetScore(2, RUSticket)
+end)
+
+hook.Add( "PlayerSpawn", "giveteam", function(ply)
+    ply:SetTeam(RUS)
 end)

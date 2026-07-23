@@ -105,11 +105,11 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     }
     -- changes the font by looking at the res v1
     local screenSettings = {
-        { threshold = 2560, fonts = "MenuSelectHud3", labels = "LabelHud4" },
-        { threshold = 1920, fonts = "MenuSelectHud3", labels = "LabelHud3" },
-        { threshold = 1600, fonts = "MenuSelectHud2", labels = "LabelHud2" },
-        { threshold = 1440, fonts = "MenuSelectHud2", labels = "LabelHud1" },
-        { threshold = 1280, fonts = "MenuSelectHud2", labels = "LabelHud1S" },
+        { threshold = 2560, fonts = "MenuSelectHud3", labels = "LabelHud4", yamount = 144 },
+        { threshold = 1920, fonts = "MenuSelectHud3", labels = "LabelHud3", yamount = 144 },
+        { threshold = 1600, fonts = "MenuSelectHud2", labels = "LabelHud2", yamount = 144 },
+        { threshold = 1440, fonts = "MenuSelectHud2", labels = "LabelHud1", yamount = 144 },
+        { threshold = 1280, fonts = "MenuSelectHud2", labels = "LabelHud1S", yamount = 144 },
         { threshold = 0,    fonts = "MenuSelectHud1", labels = "LabelHud1S" }
     }
 
@@ -122,6 +122,7 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
             break 
         end
     end
+    
 -- other teams cannot open this crate.
     if team ~= 1 then
         GW3.uiSound("locked")
