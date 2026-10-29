@@ -5,10 +5,12 @@ AddCSLuaFile("vgui/cl_teampanel.lua")
 AddCSLuaFile("vgui/cl_tabmenu.lua")
 AddCSLuaFile("sounds/cl_soundpr.lua")
 AddCSLuaFile("logihandler/cl_logihandler.lua")
+AddCSLuaFile("logispawner/cl_logispawner.lua")
 AddCSLuaFile("capturesys/cl_capturesys.lua")
 AddCSLuaFile("player/cl_playercustomization.lua")
 AddCSLuaFile("shared.lua")
 
+include("logispawner/sv_logispawner.lua")
 include("logihandler/sv_logihandler.lua")
 include("shared.lua") 
 include("player/sv_playercustomization.lua")
@@ -59,6 +61,9 @@ entAraclarRusya = {
 cv_ticketUkr = GetConVar("sv_ukraineticket")
 cv_ticketRus = GetConVar("sv_russiaticket")
 
+cv_giveLogistic = GetConVar("sv_givelogistic")
+cv_giveArmorFirstSpawn = GetConVar("sv_armoratfirst")
+
 UKRticket = cv_ticketUkr:GetInt()
 RUSticket = cv_ticketRus:GetInt()
 
@@ -70,7 +75,7 @@ team.SetUp(RUS, "Russian Ground Forces", Color(223, 8, 8))
 hook.Add("CanPlayerSuicide", "stopSuicide", function(ply)
     return true
 end)
-
+--[[
 --Burada, oyuncunun takımına göre girebileceği araçları ayarlıyoruz.
 hook.Add( "CanPlayerEnterVehicle", "PrintPlayersInVehicles", function( ply, veh, role )
     local parentVehicle = veh:GetParent() --LVS araçlarında koltuk vehicleleri vardır, ana parenti olan aracı alıyoz ki genelleme olsun
@@ -113,7 +118,7 @@ hook.Add( "CanPlayerEnterVehicle", "PrintPlayersInVehicles", function( ply, veh,
     else -- hata durumda binemesin
         return false
     end
-end )
+end )]]
 
 hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikten sonra ticketleri tekrar setliyoruz, ve her takıma score olarak ticketleri koyuyoruz. 
     print("InitPostEntity")
@@ -123,6 +128,12 @@ hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikt
     team.SetScore(2, RUSticket)
 end)
 
-hook.Add( "PlayerSpawn", "giveteam", function(ply)
-    ply:SetTeam(RUS)
+
+hook.Add( "Initialize", "iniilazir", function()
+    timer.Simple(3, function()
+        print("İNİTİALİZE all")
+        SpawnVehicleUkraynaInitial()
+        SpawnVehicleRusyaInitial()
+        SpawnVehicleLogiInitial()
+    end)
 end)

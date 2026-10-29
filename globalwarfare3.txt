@@ -91,36 +91,49 @@
 			"type" "Numeric"
 			"default" "420"
 		}
-		
 		"13"
+		{
+			"name" "sv_givelogistic"
+			"text" "Logistic Box spawn ammount, 1 low, 2 mid, 3 high. Only use these 3 numbers, (For more check workshop)"
+			"type" "CheckBox"
+			"default" "1"
+		}
+		"14"
+		{
+			"name" "sv_armoratfirst"
+			"text" "Give 2 armor boxes at initial spawn"
+			"type" "CheckBox"
+			"default" "1"
+		}
+		"15"
 		{
 			"name" "sv_conquest"
 			"text" "Conquest (If this is 1, other mods MUST remain 0):"
 			"type" "CheckBox"
 			"default" "1"
 		}
-		"14"
+		"16"
 		{
 			"name" "sv_resourcecontrol"
 			"text" "Resource Control (If this is 1, other mods MUST remain 0):"
 			"type" "CheckBox"
 			"default" "0"
 		}
-                "15"
+        "17"
 		{
 			"name" "sv_teamelimination"
 			"text" "Team Elimination (If this is 1, other mods MUST remain 0):"
 			"type" "CheckBox"
 			"default" "0"
 		}
-		"16"
+		"18"
 		{
 			"name" "sv_russiaticket"
 			"text" "Russia Ticket Amount:"
 			"type" "Numeric"
 			"default" "100"
 		}
-		"17"
+		"19"
 		{
 			"name" "sv_ukraineticket"
 			"text" "Ukraine Ticket Amount:"

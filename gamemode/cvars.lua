@@ -14,7 +14,6 @@ sv_ukraineapccooldown   = CreateConVar("sv_ukraineapccooldown", "300", { FCVAR_A
 -- Russya
 sv_russiatruckamount    = CreateConVar("sv_russiatruckamount", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Truck Amount")
 sv_russiatruckcooldown  = CreateConVar("sv_russiatruckcooldown", "180", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Truck Cooldown")
-
 sv_russiacaramount      = CreateConVar("sv_russiacaramount", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Car Amount")
 sv_russiacarcooldown    = CreateConVar("sv_russiacarcooldown", "120", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Car Cooldown")
 
@@ -23,6 +22,9 @@ sv_russiaapccooldown    = CreateConVar("sv_russiaapccooldown", "420", { FCVAR_AR
 
 sv_russiaticket    = CreateConVar("sv_russiaticket", "100", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Russia Ticket Amount")
 sv_ukraineticket    = CreateConVar("sv_ukraineticket", "100", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Ukraine Ticket Amount")
+
+sv_givelogistic    = CreateConVar("sv_givelogistic", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Logistic Box spawn ammount, 1 low, 2 mid, 3 high. Only use these 3 numbers")
+sv_armoratfirst    = CreateConVar("sv_armoratfirst", "1", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_SERVER_CAN_EXECUTE, FCVAR_REPLICATED }, "Give 2 armor boxes at initial spawn")
 
 sv_conquest = CreateConVar("sv_conquest", "1", FCVAR_ARCHIVE)
 sv_resourcecontrol = CreateConVar("sv_resourcecontrol", "0", FCVAR_ARCHIVE)
@@ -38,6 +40,11 @@ local function convarModDegisici()
     elseif sv_teamelimination:GetInt() == 1 then
         sv_conquest:SetInt(0)
         sv_resourcecontrol:SetInt(0)
+    else
+        print("ERROR CONVAR MOD DEGİSİCİ")
+        sv_conquest:SetInt(1)
+        sv_resourcecontrol:SetInt(0)
+        sv_teamelimination:SetInt(0)
     end
     print("convarModDegisici")
 end

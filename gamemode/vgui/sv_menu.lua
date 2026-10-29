@@ -28,7 +28,9 @@ net.Receive("SendTeam", function(len, ply) -- takım değişme isteğini kaptık
         digertakim = UKR
     end
     ]]
-
+    if istenentakim == ply:Team() then
+        print("zaten o takımdasın")
+    return end
     local digertakim = (istenentakim == UKR) and RUS or UKR 
 
     istenentakimsayi = team.NumPlayers(istenentakim) -- oyuncunun istediği takımın sayısı
@@ -49,7 +51,6 @@ net.Receive("SendTeam", function(len, ply) -- takım değişme isteğini kaptık
         finaltakim = istenentakim
         ply:ChatPrint(team.GetName(istenentakim) .. " takımına katıldınız.")
     end
-
     ply:SetTeam(finaltakim) -- Oyuncunun takımını final seçilen takım yapıyoz
     
     local modelSeti = {

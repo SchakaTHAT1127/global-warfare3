@@ -32,7 +32,7 @@ local function KordinatBos(pos)
     return true
 end
 
-local function SpawnVehicleRusyaInitial()
+function SpawnVehicleRusyaInitial()
     -- Döngü içinde ne kadar kaydırma yaptığımızı temiz bir şekilde takip etmek için
     local aktifOffset = 0 
 
@@ -106,18 +106,9 @@ local function YazdiriciTester()
         end
     end
 end
-
-hook.Add( "Initialize", "SpawnVehicleRusyaInitialize", function()
+--[[hook.Add( "Initialize", "SpawnVehicleRusyaInitialize", function()
     timer.Simple(3, function()
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
-        print("İNİTİALİZE RUSSSİ")
         print("İNİTİALİZE RUSSSİ")
         SpawnVehicleRusyaInitial()
     end)
-end )
+end )]]

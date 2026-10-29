@@ -13,8 +13,6 @@ local SunucuMapi = game.GetMap()
 
 local MaplerVeKoordinatlar = {
     ["wid_peremen"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
-    ["prm_hrabske"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
-    ["prm_molodoy"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) }
 }
 
 local AracCord = MaplerVeKoordinatlar[SunucuMapi] 
@@ -32,7 +30,7 @@ local function KordinatBos(pos)
     return true
 end
 
-local function SpawnVehicleUkraynaInitial()
+function SpawnVehicleUkraynaInitial()
 
     -- Döngü içinde ne kadar kaydırma yaptığımızı temiz bir şekilde takip etmek için
     local aktifOffset = 0 
@@ -109,18 +107,10 @@ local function YazdiriciTester()
         end
     end
 end
-
+--[[
 hook.Add( "Initialize", "SpawnVehicleUkraynaInitialize", function()
     timer.Simple(3, function()
         print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
-        print("İNİTİALİZE UKRAİN")
         SpawnVehicleUkraynaInitial()
     end)
-end )
+end )]]

@@ -21,87 +21,100 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     local DynamicFont = "MenuSelectHud2"
     local DynamicLabelFont = "LabelHud1"
 
+        -- The descriptions
     local descTable = {
-                ["assault"] = [[
-        Cost: 20, AK74M;
-        It is a modern Russian standard-issue rifle with a caliber of 5.45mm
-                ]],
-                ["machinegun"] = [[
-        Cost: 25, PKM;
-        It is a lightweight, durable, belt-fed general-purpose machine gun.
-                ]],
-                ["sniper"] = [[
-        Cost: 20, SVD Dragunov;
-        It is a semi-automatic designated marksman rifle (DMR) designed to extend range to squad-level distances.
-                ]],
-                ["antitank"] = [[
-        Cost: 65, RPG-7;
-        Specialized launchers and projectiles designed to neutralize armored vehicles.
-                ]],
-                ["artillery1"] = [[
-        Cost: 80, Medium Barrel Artillery;
-        Mobile indirect fire support system for mid-long-range strikes.
-                ]],
-                ["misc"] = [[
-        Cost: 170, Big Barrel Artilery;
-        Mobile but Heavy weighted indirect fire support system for long-range strikes, Can penetrate everything.
-                ]],
-                ["ammo"] = [[
-        Cost: 60, Ammo Box;
-        It has ammos for weapons.
-                ]],
-                ["rocketammo"] = [[
-        Cost: 48, Munition;
-        It has rockets for rocket launchers.
-                ]],
-                ["bandage"] = [[
-        Cost: 5, Field Bandage;
-        It is a basic bandage used to stop bleeding.
-                ]],
-                ["splint"] = [[
-        Cost: 5, Field Splint;
-        It is a medical device used to stabilize a broken bone.
-                ]],
-                ["ointment"] = [[
-        Cost: 5, Burn Ointment
-        It is a cream that relieves burn pain (Only IRL lol) and prevents infection.
-                ]],
-                ["surgerykit"] = [[
-        Cost: 10, Field Surgical Kit;
-        It is a medical kit for treating severe injuries and damaged internal organs.
-                ]],
-                ["grenade"] = [[
-        Cost: 15, Hand Grenade;
-        It is a Anti-personnel grenade used for clearing rooms or trenches.
-                ]],
-                ["smoke"] = [[
-        Cost: 10, Smoke Grenade;
-        It is a grenade that releases smoke
-                ]],
-                ["flash"] = [[
-        Cost: 10, Flash Grenade;
-        It is a grenade used to stunt enemy's
-                ]],
-                ["satchel"] = [[
-        Cost: 90, Satchel Charges;
-        Heavy explosive packs that can be activated from far away, Extremely lethal.
-                ]],
-                ["c4"] = [[
-        Cost: 80, C4;
-        Heavy explosive that uses timers to explode.
-                ]],
-                ["tnt"] = [[
-        Cost: 80, TNT;
-        Heavy explosive that activated by a fuse.
-                ]],
-                ["radio"] = [[
-        Cost: 15, Radio Set;
-        Long-range radio units for unit coordination.
-                ]],
-                ["carbine"] = [[
-        Cost: 15, AKSU-74;
-        It is a shortened AK-74, not quite prefered.
-                ]]
+            ["assault"] = [[
+    Cost: 20, AK74M;
+    It's a standard-issue rifle with a caliber of 5.45mm
+            ]],
+            ["machinegun"] = [[
+    Cost: 20, RPK;
+    It's a machine gun.
+            ]],
+            ["sniper"] = [[
+    Cost: 20, SVD Dragunov;
+    It's a semi-automatic marksman rifle
+            ]],
+            ["antitank"] = [[
+    Cost: 65, RPG-7;
+    It's a rocket launcher.
+            ]],
+            ["artillery1"] = [[
+    Cost: 120, NSV;
+    It's a machinegun, can penetrate armored vehicles.
+            ]],
+            ["misc"] = [[
+    Cost: 180, ZiS-3;
+    It's a mobile cannon, with high penetration.
+            ]],
+            ["ammo"] = [[
+    Cost: 60, Ammo Box;
+    It has ammos for weapons.
+            ]],
+            ["rocketammo"] = [[
+    Cost: 48, Munition;
+    It has rockets for rocket launchers.
+            ]],
+            ["bandage"] = [[
+    Cost: 5, Field Bandage;
+    It is a basic bandage used to stop bleeding.
+            ]],
+            ["splint"] = [[
+    Cost: 5, Field Splint;
+    It is a medical device used to stabilize a broken bone.
+            ]],
+            ["ointment"] = [[
+    Cost: 5, Burn Ointment
+    It is a cream that relieves burn pain (Only IRL lol) and prevents infection.
+            ]],
+            ["surgerykit"] = [[
+    Cost: 10, Field Surgical Kit;
+    It is a medical kit for treating severe injuries and damaged internal organs.
+            ]],
+            ["grenade"] = [[
+    Cost: 15, Hand Grenade;
+    It is a Anti-personnel grenade used for clearing rooms or trenches.
+            ]],
+            ["smoke"] = [[
+    Cost: 10, Smoke Grenade;
+    It is a grenade that releases smoke
+            ]],
+            ["flash"] = [[
+    Cost: 10, Flash Grenade;
+    It is a grenade used to stunt enemy's
+            ]],
+            ["satchel"] = [[
+    Cost: 90, Satchel Charges;
+    Heavy explosive packs that can be activated from far away, Extremely lethal.
+            ]],
+            ["c4"] = [[
+    Cost: 80, C4;
+    Heavy explosive that uses timers to explode.
+            ]],
+            ["tnt"] = [[
+    Cost: 80, TNT;
+    Heavy explosive that activated by a fuse.
+            ]],
+            ["radio"] = [[
+    Cost: 15, Radio Set;
+    Long-range radio units for unit coordination.
+            ]],
+            ["carbine"] = [[
+    Cost: 15, AKSU-74;
+    It is a shortened AK-74, not quite prefered.
+            ]],
+            ["kutuarmor"] = [[
+    Cost: 100, Armor Crate;
+    Box of armor crate, has 100 logistics inside it, you can get whatever you want.
+            ]],
+            ["kutumermi"] = [[
+    Cost: 80, High Caliber Ammunation Box;
+    It's a High Caliber Ammunation Box, for loading up 12.7mm machineguns and more. Its one time use.
+            ]],
+            ["special"] = [[
+    Cost: 20, AKM;
+    It is an old rifle. Uses 7.62×39mm and can penetrate more than the AK-74
+            ]]
     }
     -- changes the font by looking at the res v1
     local screenSettings = {
@@ -236,6 +249,8 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     AddLabel(ListWeapons, descTable["antitank"], 50, 100, categoryWide,tall)
     AddLogiButton(ListWeapons, "Carbine", "carbine")
     AddLabel(ListWeapons, descTable["carbine"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Extra", "special")
+    AddLabel(ListWeapons, descTable["special"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- AMMO CATEGORY
@@ -278,7 +293,7 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     -----------------------------------------------------
     local DAntiTank = vgui.Create( "DCollapsibleCategory", panel )
     DAntiTank:SetLabel("") 
-    DAntiTank:SetPos(wide * 0.45 + categoryWide, tall * 0.05)
+    DAntiTank:SetPos(wide * 0.45 + categoryWide, tall * 0.02)
     DAntiTank:SetSize(categoryWide, categoryTall)
     DAntiTank:SetExpanded(false)
 
@@ -304,19 +319,23 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     ListMisc:DockPadding( 10, 10, 10, 0 )
     DAntiTank:SetContents( ListMisc )
 
-    AddLogiButton(ListMisc, "Medium Barrel Artillery", "artillery1")
+    AddLogiButton(ListMisc, "NSV", "artillery1")
     AddLabel(ListMisc, descTable["artillery1"], 50, 100, categoryWide,tall)
-    AddLogiButton(ListMisc, "Long-Barreled Artillery", "misc")
+    AddLogiButton(ListMisc, "Artillery", "misc")
     AddLabel(ListMisc, descTable["misc"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Radio Kit Crate", "radio")
     AddLabel(ListMisc, descTable["radio"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "High Caliber Ammunation Box", "kutumermi")
+    AddLabel(ListMisc, descTable["kutumermi"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Armor Crate", "kutuarmor")
+    AddLabel(ListMisc, descTable["kutuarmor"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- HANDHELD GRENADE CATEGORY
     -----------------------------------------------------
     local DGrenade = vgui.Create( "DCollapsibleCategory", panel )
     DGrenade:SetLabel("") 
-    DGrenade:SetPos(wide * 0.45 + categoryWide, tall * 0.50)
+    DGrenade:SetPos(wide * 0.45 + categoryWide, tall * 0.60)
     DGrenade:SetSize(categoryWide, categoryTall)
     DGrenade:SetExpanded(false)
 
@@ -348,7 +367,6 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
     AddLabel(ListGrenade, descTable["smoke"], 50, 100, categoryWide,tall)
     AddLogiButton(ListGrenade, "Flash Grenade", "flash")
     AddLabel(ListGrenade, descTable["flash"], 50, 100, categoryWide,tall)
-
     -----------------------------------------------------
     -- MEDİCAL CATEGORY
     -----------------------------------------------------
