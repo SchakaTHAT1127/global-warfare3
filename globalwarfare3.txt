@@ -95,7 +95,7 @@
 		{
 			"name" "sv_givelogistic"
 			"text" "Logistic Box spawn ammount, 1 low, 2 mid, 3 high. Only use these 3 numbers, (For more check workshop)"
-			"type" "CheckBox"
+			"type" "Numeric"
 			"default" "1"
 		}
 		"14"

@@ -55,6 +55,7 @@ net.Receive("logisticSendNewAmountArmorRUS", function(len, ply)
     local team = ply:Team()
 
     -- calling the func
+    print("called func")
     GW3.entCall(wpn, team, ply, sentPos, readedLogistic, targetEnt)
 end)
 net.Receive("logisticSendNewAmountBuild", function(len, ply)
@@ -72,7 +73,7 @@ end)
 
 function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
     local wpns = {
-        ["assault"]    = { [1] = { class = "tacrp_ex_ak47", price = 20 }, [2] = { class = "tacrp_ak_ak74", price = 20 } },
+        ["assault"]    = { [1] = { class = "tacrp_ak_ak74", price = 20 }, [2] = { class = "tacrp_ak_ak74", price = 20 } },
         ["machinegun"] = { [1] = { class = "tacrp_io_rpk", price = 20}, [2] = { class = "tacrp_sd_pkm", price = 25 } },
         ["sniper"]     = { [1] = { class = "tacrp_ak_svd", price = 20 }, [2] = { class = "tacrp_ak_svd", price = 20 } },
         ["antitank"]   = { [1] = { class = "tacrp_rpg7", price = 65 }, [2] = { class = "tacrp_rpg7", price = 65 } },
@@ -110,12 +111,12 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         ["kutumermi"]         = { [1] = { class = "lvs_item_ammocrate", price = 80 }, [2] = { class = "lvs_item_ammocrate", price = 80 } },
         ["kutuarmor"]        = { [1] = { class = "ent_jack_gmod_eztnt", price = 100 }, [2] = { class = "ent_jack_gmod_eztnt", price = 100 } },
 
-        ["dragonsteeth"]    = { [1] = { class = "ent_dragonstone", price = 15 }, [2] = { class = "ent_dragonstone", price = 15 } },
-        ["hedgehog"]         = { [1] = { class = "ent_czechmetalthing", price = 15 }, [2] = { class = "ent_czechmetalthing", price = 15 } },
-        ["wall"]        = { [1] = { class = "ent_sandbagwid", price = 15 }, [2] = { class = "ent_sandbagwid", price = 15 } },
-        ["tallwall"]    = { [1] = { class = "ent_sandbagwidbig", price = 20 }, [2] = { class = "ent_sandbagwidbig", price = 20 } },
-        ["corner"]         = { [1] = { class = "ent_sandbagwidcorner", price = 20 }, [2] = { class = "ent_sandbagwidcorner", price = 20 } },
-        ["tallcorner"]        = { [1] = { class = "ent_sandbagwidcornerbig", price = 25 }, [2] = { class = "ent_sandbagwidcornerbig", price = 25 } },
+        ["dragonsteeth"]    = { [1] = { class = "ent_dragonstone", price = 30 }, [2] = { class = "ent_dragonstone", price = 30 } },
+        ["hedgehog"]         = { [1] = { class = "ent_czechmetalthing", price = 30 }, [2] = { class = "ent_czechmetalthing", price = 30 } },
+        ["wall"]        = { [1] = { class = "ent_sandbagwid", price = 30 }, [2] = { class = "ent_sandbagwid", price = 30 } },
+        ["tallwall"]    = { [1] = { class = "ent_sandbagwidbig", price = 40 }, [2] = { class = "ent_sandbagwidbig", price = 40 } },
+        ["corner"]         = { [1] = { class = "ent_sandbagwidcorner", price = 20 }, [2] = { class = "ent_sandbagwidcorner", price = 30 } },
+        ["tallcorner"]        = { [1] = { class = "ent_sandbagwidcornerbig", price = 40 }, [2] = { class = "ent_sandbagwidcornerbig", price = 40 } },
        
         ["metalpanel"] = {
             [1] = { class = "prop_physics", model = "models/props_debris/metal_panel01a.mdl", price = 15 },

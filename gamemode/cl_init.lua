@@ -5,7 +5,6 @@ include("vgui/cl_teampanel.lua")
 include("vgui/cl_tabmenu.lua")
 include("sounds/cl_soundpr.lua")
 include("logihandler/cl_logihandler.lua")
-include("logispawner/cl_logispawner.lua")
 include("capturesys/cl_capturesys.lua")
 include("player/cl_playercustomization.lua")
 

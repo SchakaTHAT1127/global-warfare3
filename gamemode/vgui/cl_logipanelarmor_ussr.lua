@@ -21,8 +21,8 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     local DynamicLabelFont = "LabelHud1"
     local descTable = {
     ["zirh1"] = [[
-    Cost: 20 6B5-16 vest
-    A made that gives balistic protection and place to put ammo
+    Cost: 20 6B13 vest
+    A vest that gives balistic protection.
         ]],
     ["zirh2"] = [[
     Cost: 10 Lifchik vest
@@ -33,12 +33,12 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     A helmet with some shrapnel protection.
         ]],
     ["3000"] = [[
-    Cost: 20 TEMP-3000 Helmet
+    Cost: 20 6B7-1M Helmet
     A balistic kevlar helmet.
         ]],
-    ["30002"] = [[
-    Cost: 20 TEMP-3000 Helmet (Cover)
-    A balistic kevlar helmet with an camouflage cover.
+    ["helmetozel"] = [[
+    Cost: 15 ZHS-1-2M
+    A balistic helmet that can protect agaisnt small caliber.
         ]],
     ["sapka"] = [[
     Cost: 5 Camo Cap
@@ -48,10 +48,50 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     Cost: 5 Blue Beret
     A blue beret.
         ]],
+    ["backpack"] = [[
+    Cost: 10 VKBO Backpack
+    A backpack.
+        ]],
     ["bant"] = [[
     Cost: 5 Armband
     A colorable armband.
-        ]]
+        ]],
+    ["balaclava"] = [[
+    Cost: 5 Balaclava
+    A balaclava that hides your face.
+        ]],
+    ["halfmask"] = [[
+    Cost: 5 Half Skull Mask
+    A half skull mask that is very tuff.
+        ]],
+    ["hat"] = [[
+    Cost: 5 Black Hat
+    A black hat.
+        ]],
+    ["glassess"] = [[
+    Cost: 5 Aviator Glasses
+    Aviator glasses, they look tuff.
+        ]],
+    ["bandana"] = [[
+    Cost: 5 Olive Head Bandana
+    It is a olive head bandana.
+        ]],
+    ["bandana2"] = [[
+    Cost: 5 Black Head Bandana
+    It is a black head bandana.
+        ]],
+    ["tanker"] = [[
+    Cost: 5 Tank Cap
+    It is Korsar balistic vest, you can carry ammo too, and lightweight.
+        ]],
+    ["termal"] = [[
+    Cost: 80 Thermal Googles
+    It is modern thermal googles, dont waste supplys buying this.
+        ]],
+    ["30002"] = [[
+    Cost: 80 Night Vision
+    It is modern night vision googles, dont waste supplys buying this.
+        ]],
     }
     -- changes the font by looking at the res v1
     local screenSettings = {
@@ -122,7 +162,6 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
                 net.WriteInt(logisticAmount, 9)
             net.SendToServer()
             print(logisticAmount)
-            print("çağırdım")
             if logiAmount <= 0 then
                 print("alo muhittin uzaylılar kacırdı diyorum")
             end
@@ -148,7 +187,7 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     -----------------------------------------------------sss
     local DWeapons = vgui.Create( "DCollapsibleCategory", panel )
     DWeapons:SetLabel("") 
-    DWeapons:SetPos(wide * 0.12, tall * 0.23)
+    DWeapons:SetPos(wide * 0.12, tall * 0.05)
     DWeapons:SetSize(categoryWide, categoryTall)
     DWeapons:SetExpanded(false)
 
@@ -183,12 +222,21 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     AddLogiButton(ListWeapons, "Armband", "bant")
     AddLabel(ListWeapons, descTable["bant"], 50, 100, categoryWide,tall)
 
+    AddLogiButton(ListWeapons, "Balaclava", "balaclava")
+    AddLabel(ListWeapons, descTable["balaclava"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Black Hat", "hat")
+    AddLabel(ListWeapons, descTable["hat"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Half Mask", "halfmask")
+    AddLabel(ListWeapons, descTable["halfmask"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Thermal Googles", "termal")
+    AddLabel(ListWeapons, descTable["termal"], 50, 100, categoryWide,tall)
+
     -----------------------------------------------------
     -- MISC VEHICLE CATEGORY
     -----------------------------------------------------
     local DAntiTank = vgui.Create( "DCollapsibleCategory", panel )
     DAntiTank:SetLabel("") 
-    DAntiTank:SetPos(wide * 0.38 + categoryWide, tall * 0.23)
+    DAntiTank:SetPos(wide * 0.38 + categoryWide, tall*0.05)
     DAntiTank:SetSize(categoryWide, categoryTall)
     DAntiTank:SetExpanded(false)
 
@@ -215,7 +263,7 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     DAntiTank:SetContents( ListMisc )
 
 
-    AddLogiButton(ListMisc, "TEMP-3000 Helmet", "3000")
+    AddLogiButton(ListMisc, "6B7-1M", "3000")
     AddLabel(ListMisc, descTable["3000"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "TEMP-3000 Helmet (Cover)", "30002")
     AddLabel(ListMisc, descTable["30002"], 50, 100, categoryWide,tall)
@@ -223,6 +271,15 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
     AddLabel(ListMisc, descTable["sapka"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Blue Beret", "sapka2")
     AddLabel(ListMisc, descTable["sapka2"], 50, 100, categoryWide,tall)
+
+    AddLogiButton(ListMisc, "Aviator Glasses", "glassess")
+    AddLabel(ListMisc, descTable["glassess"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Olive Head Bandana", "bandana")
+    AddLabel(ListMisc, descTable["bandana"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Black Head Bandana", "bandana2")
+    AddLabel(ListMisc, descTable["bandana2"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Tank Cap", "tanker")
+    AddLabel(ListMisc, descTable["tanker"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     local Seperator1 = vgui.Create( "DPanel", panel )

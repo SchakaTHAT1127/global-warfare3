@@ -43,7 +43,7 @@ local randomSounds = {
 
 function ENT:Initialize()
 	-- the initial logistic amouınt
-	self.crateLogistic = 1
+	self.crateLogistic = 200
 	-- giving  the amount of logistic to the client
     self:SetNWInt("logisticAmountUkr", self.crateLogistic)
     -- the health
@@ -161,9 +161,8 @@ function ENT:OnTakeDamage( dmginfo )
     self:SetNWInt("logisticAmountUkr", math.Round(self.crateLogistic))
     
     if self.crateLogistic <= 0 then 
-    	self:Remove()
     	hook.Run("logistikcrateBitti", "ent_logicrate")
-    	print("kutu bitti")
+    	self:Remove()
    	end
 end
 
@@ -171,4 +170,9 @@ function ENT:SetLogisticAmountUkr(amount)
     self.crateLogistic = amount
  	self:SetNWInt("logisticAmountUkr", math.Round(amount))
     print(self:GetClass() .. " yeni lojistik amountı: " .. amount)
+    if self.crateLogistic <= 0 then 
+    	print("if self.crateLogistic <= 0 then ")
+    	hook.Run("logistikcrateBitti", "ent_logicrate")
+    	self:Remove()
+   	end
 end

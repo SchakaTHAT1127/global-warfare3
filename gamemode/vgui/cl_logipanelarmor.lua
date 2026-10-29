@@ -22,7 +22,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     local descTable = {
     ["zirh1"] = [[
     Cost: 20 6B5-16 vest
-    A made that gives balistic protection and place to put ammo
+    A vest that gives balistic protection and place to put ammo
         ]],
     ["zirh2"] = [[
     Cost: 10 Lifchik vest
@@ -41,7 +41,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     A balistic kevlar helmet with an camouflage cover.
         ]],
     ["helmetozel"] = [[
-    Cost: 15 Maska-1SCh
+    Cost: 15 ZHS-1-2M
     A balistic helmet that can protect agaisnt small caliber.
         ]],
     ["sapka"] = [[
@@ -53,13 +53,45 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     A blue beret.
         ]],
     ["backpack"] = [[
-    Cost: 10
+    Cost: 10 Assault Backpack
     A backpack.
         ]],
     ["bant"] = [[
     Cost: 5 Armband
     A colorable armband.
-        ]]
+        ]],
+    ["balaclava"] = [[
+    Cost: 5 Balaclava
+    A balaclava that hides your face.
+        ]],
+    ["halfmask"] = [[
+    Cost: 5 Half Skull Mask
+    A half skull mask that is very tuff.
+        ]],
+    ["hat"] = [[
+    Cost: 5 Black Hat
+    A black hat.
+        ]],
+    ["glassess"] = [[
+    Cost: 5 Aviator Glasses
+    Aviator glasses, they look tuff.
+        ]],
+    ["bandana"] = [[
+    Cost: 5 Olive Head Bandana
+    It is a olive head bandana.
+        ]],
+    ["bandana2"] = [[
+    Cost: 5 Black Head Bandana
+    It is a black head bandana.
+        ]],
+    ["korsar"] = [[
+    Cost: 25 Korsar Balistic Vest
+    It is Korsar balistic vest, you can carry ammo too, and lightweight.
+        ]],
+    ["tanker"] = [[
+    Cost: 5 Tank Cap
+    It is Korsar balistic vest, you can carry ammo too, and lightweight.
+        ]],
     }
     -- changes the font by looking at the res v1
     local screenSettings = {

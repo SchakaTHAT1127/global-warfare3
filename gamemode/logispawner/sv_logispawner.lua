@@ -1,28 +1,21 @@
-
--- ekliyoruz
-AddCSLuaFile("cl_logispawner.lua")
-AddCSLuaFile("globalwarfare3/gamemode/shared.lua")
+-- Global Warfare 3 - logistics/build crate spawner
+-- Reads ConVars at runtime so this file can be included before cvars.lua finishes loading.
 
 GW3 = GW3 or {}
 
-local logicrate = "ent_logicrate"
-local buildcrate = "ent_buildcrate"
-
-local logiOran = cv_giveLogistic:GetInt()
-local logiSayisi = nil
-local buildSayisi = nil
-
-local SunucuMapi = game.GetMap()
+local LOGI_CLASS_UKR = "ent_logicrate"
+local BUILD_CLASS = "ent_buildcrate"
+local SPAWN_STEP = 60
+local MAX_SEARCH_ATTEMPTS = 100
 
 local MaplerVeKoordinatlar = {
     ["wid_peremen"] = {
         pos = Vector(13082.137695, -13277.175781, -25.96875),
         ang = Angle(0, 180, 0)
-    },
+    }
 }
 
-local Kordinat = MaplerVeKoordinatlar[SunucuMapi]
-local LSseferSayisi = 0
+local Kordinat = MaplerVeKoordinatlar[game.GetMap()]
 
 local tabla = {
     [1] = { logiSayisi = 2, buildSayisi = 1 },
@@ -30,104 +23,128 @@ local tabla = {
     [3] = { logiSayisi = 4, buildSayisi = 2 }
 }
 
--- Koordinatın araç oluşturmak için boş olup olmadığını kontrol eder
+local allowedCrateClasses = {
+    [LOGI_CLASS_UKR] = true,
+    [BUILD_CLASS] = true
+}
+
+local function GetSpawnSettings()
+    local convar = GetConVar("sv_givelogistic")
+    local level = convar and convar:GetInt() or 1
+    local settings = tabla[level]
+
+    if not settings then
+        print("[GW3] sv_givelogistic gecersiz; varsayilan seviye 1 kullaniliyor.")
+        settings = tabla[1]
+    end
+
+    return settings
+end
+
+-- A crate or vehicle already near this position makes the position unavailable.
 local function KordinatBos(pos)
     if not pos then return false end
 
-    local finderSphere = ents.FindInSphere(pos, 120)
-
-    for _, ent in pairs(finderSphere) do
-        if IsValid(ent) and ent:IsVehicle() then
-            return false
+    for _, ent in ipairs(ents.FindInSphere(pos, 20)) do
+        if IsValid(ent) then
+            local class = ent:GetClass()
+            if ent:IsVehicle() or allowedCrateClasses[class] then
+                return false
+            end
         end
     end
 
     return true
 end
 
--- Başlangıç lojistik araçlarını oluşturur
-function SpawnVehicleLogiInitial()
-    if not Kordinat then
-        return
+local function FindFreePosition(startPos, axis)
+    if not startPos then return nil end
+
+    for attempt = 0, MAX_SEARCH_ATTEMPTS do
+        local offset = attempt * SPAWN_STEP
+        local pos = Vector(startPos.x, startPos.y, startPos.z)
+
+        if axis == "y" then
+            pos.y = pos.y + offset
+        else
+            pos.x = pos.x + offset
+        end
+
+        if KordinatBos(pos) then
+            return pos
+        end
     end
 
-    local ayarlar = tabla[logiOran]
+    print("[GW3] Lojistik kutusu icin bos spawn noktasi bulunamadi.")
+    return nil
+end
 
-    if not ayarlar then
-        return
+local function SpawnCrate(class, pos)
+    if not allowedCrateClasses[class] or not pos then return false end
+
+    local crate = ents.Create(class)
+    if not IsValid(crate) then
+        print("[GW3] Kutu olusturulamadi: " .. tostring(class))
+        return false
     end
 
-    logiSayisi = ayarlar.logiSayisi
-    buildSayisi = ayarlar.buildSayisi
+    crate:SetPos(pos)
+    crate:SetAngles(Kordinat and Kordinat.ang or Angle(0, 0, 0))
+    crate:Spawn()
+    crate:Activate()
+    return true
+end
 
-    local aktifOffset = 0
+local function SpawnInitialGroup(class, count, activeOffset)
+    activeOffset = activeOffset or 0
 
-    for i = 1, logiSayisi do
-        local GeciciPosUkr = Vector(
-            Kordinat.pos.x + aktifOffset,
+    for _ = 1, count do
+        local startPos = Vector(
+            Kordinat.pos.x + activeOffset,
             Kordinat.pos.y,
             Kordinat.pos.z
         )
+        local spawnPos = FindFreePosition(startPos, "x")
+        if not spawnPos then break end
+        if not SpawnCrate(class, spawnPos) then break end
 
-        while not KordinatBos(GeciciPosUkr) do
-            GeciciPosUkr.x = GeciciPosUkr.x + 60
-        end
-
-        local vehicleUkr = ents.Create(logicrate)
-
-        if IsValid(vehicleUkr) then
-            vehicleUkr:SetPos(GeciciPosUkr)
-            vehicleUkr:SetAngles(Kordinat.ang)
-            vehicleUkr:Spawn()
-            vehicleUkr:Activate()
-        else
-        end
-
-        aktifOffset = aktifOffset + 60
+        activeOffset = spawnPos.x - Kordinat.pos.x + SPAWN_STEP
     end
+
+    return activeOffset
 end
 
-local function SpawnVehicleLogi(entityClass)
-    if not Kordinat or not entityClass then
+-- Called by gamemode/init.lua after the map entities have initialized.
+function SpawnVehicleLogiInitial()
+    if not Kordinat then
+        print("[GW3] Bu harita icin lojistik spawn koordinati yok: " .. game.GetMap())
         return
     end
 
-    local GeciciPosUkr = Vector(
-        Kordinat.pos.x,
-        Kordinat.pos.y,
-        Kordinat.pos.z
-    )
+    local settings = GetSpawnSettings()
+    local activeOffset = SpawnInitialGroup(LOGI_CLASS_UKR, settings.logiSayisi, 0)
 
-    while not KordinatBos(GeciciPosUkr) do
-        GeciciPosUkr.x = GeciciPosUkr.x + 60
-        LSseferSayisi = LSseferSayisi + 1
-    end
-
-    local vehicleUkr = ents.Create(logicrate)
-
-    if IsValid(vehicleUkr) then
-        vehicleUkr:SetPos(GeciciPosUkr)
-        vehicleUkr:SetAngles(Kordinat.ang)
-        vehicleUkr:Spawn()
-        vehicleUkr:Activate()
-    else
-    end
-    LSseferSayisi = 0
+    -- buildSayisi was previously calculated but never used; spawn those crates too.
+    SpawnInitialGroup(BUILD_CLASS, settings.buildSayisi, activeOffset)
 end
 
--- Lojistik kasası bittiğinde yeni araç oluşturur
-hook.Add("logistikcrateBitti", "logicrateBitti", function(entityClass)
-    local entCooldown = 1
+local function SpawnVehicleLogi(entityClass)
+    if not Kordinat then return end
 
-    timer.Simple(entCooldown, function()
+    local class = entityClass or LOGI_CLASS_UKR
+    if not allowedCrateClasses[class] then
+        print("[GW3] Bilinmeyen lojistik kutusu sinifi, respawn atlandi: " .. tostring(class))
+        return
+    end
+
+    local spawnPos = FindFreePosition(Kordinat.pos, "x")
+    if not spawnPos then return end
+    SpawnCrate(class, spawnPos)
+end
+
+-- Depleted logistics/build crates announce their class so the correct crate respawns.
+hook.Add("logistikcrateBitti", "GW3_RespawnLogiCrate", function(entityClass)
+    timer.Simple(300, function()
         SpawnVehicleLogi(entityClass)
     end)
 end)
---[[
-hook.Add( "Initialize", "SpawnVehicleLogiInitialize", function()
-    timer.Simple(3, function()
-        print("İNİTİALİZE kutu")
-        SpawnVehicleLogiInitial()
-    end)
-end )
-]]
