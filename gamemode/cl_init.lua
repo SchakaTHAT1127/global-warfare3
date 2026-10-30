@@ -2,6 +2,7 @@
 include("shared.lua")
 include("vgui/cl_menu.lua")
 include("vgui/cl_teampanel.lua")
+include("vgui/cl_winnermenu.lua")
 include("vgui/cl_tabmenu.lua")
 include("sounds/cl_soundpr.lua")
 include("logihandler/cl_logihandler.lua")
@@ -170,3 +171,110 @@ surface.CreateFont( "BigLoadSelectHud", {
 	additive = true,
 	outline = true,
 } )
+
+GW3 = GW3 or {}
+
+local barriers = {}
+
+net.Receive("GW3_TeamBarrierSync", function()
+
+    for teamID = 1, 2 do
+        barriers[teamID] = {
+            active = net.ReadBool(),
+            pos = net.ReadVector(),
+            radius = net.ReadFloat(),
+            endTime = net.ReadFloat()
+        }
+    end
+
+end)
+
+-- KÜRELERİ ÇİZ
+hook.Add("PostDrawTranslucentRenderables", "GW3_DrawTeamBarriers", function(depth, skybox)
+
+    if skybox then return end
+
+    for teamID, data in pairs(barriers) do
+
+        if not data.active or CurTime() >= data.endTime then
+            continue
+        end
+
+        local color
+
+        if teamID == 1 then
+            color = Color(40, 140, 255, 230) -- MAVİ
+        else
+            color = Color(255, 65, 65, 230) -- KIRMIZI
+        end
+
+        render.DrawWireframeSphere(
+            data.pos,
+            data.radius,
+            32,
+            16,
+            color,
+            true
+        )
+
+    end
+
+end)
+
+local baskatable = {
+    [2] = {
+        pos = Vector(-13667.385742, -1544.606445, -762.212280),
+        radius = 5000
+    },
+
+    [1] = {
+        pos = Vector(12199.857422, -12617.125000, -47.968742),
+        radius = 5000
+    }
+}
+
+hook.Add("PreDrawHalos", "GW3_EnemyZoneWallhack", function()
+
+    local glowingPlayers = {}
+
+    for _, ply in ipairs(player.GetAll()) do
+
+        if not IsValid(ply) or not ply:Alive() then continue end
+
+        local teamID = ply:Team()
+
+        -- 2. takım, 1. takımın bölgesine girdiyse
+        if teamID == 2 then
+
+            local zone = baskatable[1]
+
+            if ply:GetPos():DistToSqr(zone.pos) <= zone.radius ^ 2 then
+                table.insert(glowingPlayers, ply)
+            end
+
+        -- 1. takım, 2. takımın bölgesine girdiyse
+        elseif teamID == 1 then
+
+            local zone = baskatable[2]
+
+            if ply:GetPos():DistToSqr(zone.pos) <= zone.radius ^ 2 then
+                table.insert(glowingPlayers, ply)
+            end
+
+        end
+
+    end
+
+    if #glowingPlayers > 0 then
+        halo.Add(
+            glowingPlayers,
+            Color(255, 0, 0),
+            1,
+            1,
+            1,
+            true,
+            true
+        )
+    end
+
+end)

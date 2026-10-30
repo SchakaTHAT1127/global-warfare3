@@ -1,5 +1,8 @@
 -- Global Warfare 3 - ticket system
 -- Ticket scores are initialized by gamemode/init.lua after the ConVars are available.
+local cooldown2 = 0
+local cooldownTime2 = 1
+local sopar = 20
 
 local function HandleVehicleLoss(ent, list, teamID, teamVarName)
     if not IsValid(ent) or ent.TicketDeducted or not istable(list) then return end
@@ -69,4 +72,62 @@ end
 
 hook.Add("PlayerDeath", "GW3_PlayerDeathTicketCost", function(victim)
     HandlePlayerDeath(victim)
+end)
+
+util.AddNetworkString("GW3_WinMenuStart")
+
+local function getwinneri1()
+    print("Ukrayna kazandı")
+
+    net.Start("GW3_WinMenuStart")
+        net.WriteColor(Color(20,20,30,220))
+        net.WriteString("Ukrainian Victory!")
+        net.WriteString("telephone/ukrayna.mp3")
+    net.Broadcast()
+end
+
+local function getwinneri2()
+    print("Rusya kazandı")
+
+    net.Start("GW3_WinMenuStart")
+        net.WriteColor(Color(30,20,20,220))
+        net.WriteString("Russian Victory!")
+        net.WriteString("telephone/rusya.mp3")
+    net.Broadcast()
+end
+
+local nextCheck = 0
+local MacBitti = false
+
+local fonksiyonCalistir = {
+    [1] = getwinneri2,
+    [2] = getwinneri1
+}
+
+hook.Add("Think", "OyunBittiMi", function()
+    if CurTime() < nextCheck or MacBitti then return end
+
+    nextCheck = CurTime() + 1
+
+    for i = 1, 2 do
+        if team.GetScore(i) <= 0 then
+            fonksiyonCalistir[i]()
+
+            print(i .. " takımı 0 veya daha az ticket!")
+
+            MacBitti = true
+            break
+        end
+    end
+end)
+
+hook.Add("Think", "partsSERVER", function() 
+    if MacBitti and CurTime() > cooldown2 and sopar > 0 then
+        cooldown2 = CurTime() + cooldownTime2
+        print("sopar server")
+        sopar = sopar - 1
+    elseif sopar <= 0 then
+        print("sopar server ELSEIF HALİ")
+        RunConsoleCommand("changelevel", game.GetMap())
+    end
 end)

@@ -83,14 +83,95 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         ["misc"]       = { [1] = { class = "lvs_trailer_zis3", price = 170 }, [2] = { class = "lvs_trailer_zis3", price = 170 } },
         ["radio"]      = { [1] = { class = "ent_radcrate", price = 15 }, [2] = { class = "ent_radcrate", price = 15 } },
 
-        ["zirh1"]    = { [1] = { class = "ent_jack_gmod_ezarmor_6b5-16ttsko", price = 20 }, [2] = { class = "ent_jack_gmod_ezarmor_6b13rus", price = 20 } },
-        ["zirh2"] = { [1] = { class = "ent_jack_gmod_ezarmor_lifchik-ukr", price = 5}, [2] = { class = "ent_jack_gmod_ezarmor_lifchik-flora", price = 5 } },
-        ["sapka"]     = { [1] = { class = "ent_jack_gmod_ezarmor_kepka-afganka", price = 5 }, [2] = { class = "ent_jack_gmod_ezarmor_ruscap", price = 5 } },
-        ["sapka2"]   = { [1] = { class = "ent_jack_gmod_ezarmor_blueberretrus", price = 5 }, [2] = { class = "ent_jack_gmod_ezarmor_blueberretrus", price = 5 } },
-        ["3000"]   = { [1] = { class = "ent_jack_gmod_ezarmor_temp3000coverless", price = 20 }, [2] = { class = "ent_jack_gmod_ezarmor_ruskask", price = 20 } },
-        ["30002"]   = { [1] = { class = "ent_jack_gmod_ezarmor_temp3000cover", price = 20 }, [2] = { class = "ent_jack_gmod_ezarmor_vkborussianbag", price = 5 } },
-        ["ssh"] = { [1] = { class = "ent_jack_gmod_ezarmor_ssh68cover", price = 10 }, [2] = { class = "ent_jack_gmod_ezarmor_ssh68coverflora", price = 10 } },
-        ["bant"]       = { [1] = { class = "ent_jack_gmod_ezarmor_colorarmband", price = 5 }, [2] = { class = "ent_jack_gmod_ezarmor_colorarmband", price = 5 } },
+        ["zirh1"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_6b5-16ttsko", price = 20 },
+            [2] = { class = "ent_jack_gmod_ezarmor_6b13rus", price = 20 }
+        },
+
+        ["zirh2"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_lifchik-ukr", price = 10 },
+            [2] = { class = "ent_jack_gmod_ezarmor_lifchik-flora", price = 10 }
+        },
+
+        ["ssh"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_ssh68cover", price = 10 },
+            [2] = { class = "ent_jack_gmod_ezarmor_ssh68coverflora", price = 10 }
+        },
+
+        ["3000"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_temp3000coverless", price = 20 },
+            [2] = { class = "ent_jack_gmod_ezarmor_ruskask", price = 20 }
+        },
+
+        ["helmetozel"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_zhs1-2m", price = 15 },
+            [2] = { class = "ent_jack_gmod_ezarmor_zhs1-2m", price = 15 }
+        },
+
+        ["sapka"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_kepka-afganka", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_ruscap", price = 5 }
+        },
+
+        ["sapka2"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_blueberretrus", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_blueberretrus", price = 5 }
+        },
+
+        ["backpack"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_ukrbackpack", price = 10 },
+            [2] = { class = "ent_jack_gmod_ezarmor_vkborussianbag", price = 10 }
+        },
+
+        ["bant"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_colorarmband", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_colorarmband", price = 5 }
+        },
+
+        ["balaclava"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_balaclava", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_balaclava", price = 5 }
+        },
+
+        ["halfmask"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_balaclava2", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_balaclava2", price = 5 }
+        },
+
+        ["hat"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_capasdsd", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_capasdsd", price = 5 }
+        },
+
+        ["glassess"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_glasses1", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_glasses1", price = 5 }
+        },
+
+        ["bandana"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_headbandana", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_headbandana", price = 5 }
+        },
+
+        ["bandana2"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_headbandana2", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_headbandana2", price = 5 }
+        },
+
+        ["tanker"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_tankerhelmet", price = 5 },
+            [2] = { class = "ent_jack_gmod_ezarmor_tankerhelmet", price = 5 }
+        },
+
+        ["termal"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_thermals", price = 80 },
+            [2] = { class = "ent_jack_gmod_ezarmor_thermals", price = 80 }
+        },
+
+        ["30002"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_nvgs", price = 80 },
+            [2] = { class = "ent_jack_gmod_ezarmor_nvgs", price = 80 }
+        },
 
         ["ammo"]       = { [1] = { class = "ent_jack_gmod_ezammo", price = 60 }, [2] = { class = "ent_jack_gmod_ezammo", price = 60 } },
         ["rocketammo"] = { [1] = { class = "ent_jack_gmod_ezmunitions", price = 48 }, [2] = { class = "ent_jack_gmod_ezmunitions", price = 48 } },

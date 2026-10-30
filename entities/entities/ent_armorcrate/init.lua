@@ -166,7 +166,7 @@ end
 function ENT:SetarmorUKRLogisticAmount(amount)
     self.crateLogisticArmorUKR = amount
  	self:SetNWInt("armorUKRLogisticAmount", math.Round(amount))
-    if self.crateLogistic <= 0 then 
+    if self.crateLogisticArmorUKR <= 0 then 
     	self:Remove()
    	end
 end

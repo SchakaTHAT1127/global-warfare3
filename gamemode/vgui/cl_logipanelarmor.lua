@@ -188,7 +188,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     -----------------------------------------------------
     local DWeapons = vgui.Create( "DCollapsibleCategory", panel )
     DWeapons:SetLabel("") 
-    DWeapons:SetPos(wide * 0.12, tall * 0.23)
+    DWeapons:SetPos(wide * 0.12, tall * 0.08)
     DWeapons:SetSize(categoryWide, categoryTall)
     DWeapons:SetExpanded(false)
 
@@ -206,7 +206,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
 
-        draw.SimpleTextOutlined("First Props", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
+        draw.SimpleTextOutlined("First Armor Set", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
     end
 
     local ListWeapons = vgui.Create( "DListLayout", DWeapons ) 
@@ -222,13 +222,19 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     AddLabel(ListWeapons, descTable["ssh"], 50, 100, categoryWide,tall)
     AddLogiButton(ListWeapons, "Armband", "bant")
     AddLabel(ListWeapons, descTable["bant"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Balaclava", "balaclava")
+    AddLabel(ListWeapons, descTable["balaclava"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Black Hat", "hat")
+    AddLabel(ListWeapons, descTable["hat"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Half Mask", "halfmask")
+    AddLabel(ListWeapons, descTable["halfmask"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- MISC VEHICLE CATEGORY
     -----------------------------------------------------
     local DAntiTank = vgui.Create( "DCollapsibleCategory", panel )
     DAntiTank:SetLabel("") 
-    DAntiTank:SetPos(wide * 0.38 + categoryWide, tall * 0.23)
+    DAntiTank:SetPos(wide * 0.38 + categoryWide, tall * 0.03)
     DAntiTank:SetSize(categoryWide, categoryTall)
     DAntiTank:SetExpanded(false)
 
@@ -246,7 +252,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
 
-        draw.SimpleTextOutlined("Second Props", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
+        draw.SimpleTextOutlined("Second Armor Set", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
     end
 
     local ListMisc = vgui.Create( "DListLayout", DAntiTank ) 
@@ -263,6 +269,14 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     AddLabel(ListMisc, descTable["sapka"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Blue Beret", "sapka2")
     AddLabel(ListMisc, descTable["sapka2"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Aviator Glasses", "glassess")
+    AddLabel(ListMisc, descTable["glassess"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Olive Head Bandana", "bandana")
+    AddLabel(ListMisc, descTable["bandana"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Black Head Bandana", "bandana2")
+    AddLabel(ListMisc, descTable["bandana2"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListMisc, "Tank Cap", "tanker")
+    AddLabel(ListMisc, descTable["tanker"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     local Seperator1 = vgui.Create( "DPanel", panel )

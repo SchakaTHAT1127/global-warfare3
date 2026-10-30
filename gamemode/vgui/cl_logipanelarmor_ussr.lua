@@ -205,7 +205,7 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
 
-        draw.SimpleTextOutlined("First Props", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
+        draw.SimpleTextOutlined("First Armor Set", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
     end
 
     local ListWeapons = vgui.Create( "DListLayout", DWeapons ) 
@@ -254,7 +254,7 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
         surface.SetDrawColor(borderColor)
         surface.DrawOutlinedRect(0, 0, w, h, 2)
 
-        draw.SimpleTextOutlined("Second Props", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
+        draw.SimpleTextOutlined("Second Armor Set", DynamicFont, w / 2, h / 2, Color(230, 230, 230), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 1, Color(5, 5, 5, 255))
     end
 
     local ListMisc = vgui.Create( "DListLayout", DAntiTank ) 
@@ -265,7 +265,7 @@ function GW3.logiPanelMenuArmorRUS(parentPanel, entLocation, targetEntity, logiA
 
     AddLogiButton(ListMisc, "6B7-1M", "3000")
     AddLabel(ListMisc, descTable["3000"], 50, 100, categoryWide,tall)
-    AddLogiButton(ListMisc, "TEMP-3000 Helmet (Cover)", "30002")
+    AddLogiButton(ListMisc, "Night Vision", "30002")
     AddLabel(ListMisc, descTable["30002"], 50, 100, categoryWide,tall)
     AddLogiButton(ListMisc, "Army Cap", "sapka")
     AddLabel(ListMisc, descTable["sapka"], 50, 100, categoryWide,tall)

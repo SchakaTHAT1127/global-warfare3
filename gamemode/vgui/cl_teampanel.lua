@@ -1,11 +1,11 @@
 AddCSLuaFile("../shared.lua")
-GW3 = GW3 or {} -- Gamemode ismine özel bir tablo oluştur
+GW3 = GW3 or {}
 
 function GW3.teamPanelMenu(parentPanel)
     local panel = parentPanel
 
     local scale = ScrW() * 0.3 
-    local imgW, imgH = 1100, 600 -- Takım bayrak resimlerinin büyüklüğü 
+    local imgW, imgH = 1100, 600
     local aspect = imgH / imgW
 
     local nW = scale
@@ -14,7 +14,7 @@ function GW3.teamPanelMenu(parentPanel)
     local sW = scale
     local sH = sW * aspect
 
-    local btnW = imgW -- Buton ve resmin genişliğini aynı yaptım
+    local btnW = imgW
 
     local DermaButton = vgui.Create( "DButton", panel)
     DermaButton:SetText( "" ) 
@@ -25,7 +25,7 @@ function GW3.teamPanelMenu(parentPanel)
             net.WriteUInt(1,2) -- UKR (1), 2 BIT
         net.SendToServer()
         GW3.uiSound("button")
-        GW3.uiSound("team") -- sesleri oynatıyoz
+        GW3.uiSound("team")
     end
     DermaButton.Paint = function(self, w, h)
         surface.SetDrawColor(8, 8, 8, 215)
@@ -39,10 +39,10 @@ function GW3.teamPanelMenu(parentPanel)
             "MenuSelectHud2",
             w / 2,
             h / 2,
-            Color(230, 230, 230),           -- color
-            TEXT_ALIGN_CENTER,              -- xalignment
-            TEXT_ALIGN_CENTER,              -- yalignment
-            1,                              -- outline wideness
+            Color(230, 230, 230),
+            TEXT_ALIGN_CENTER,
+            TEXT_ALIGN_CENTER,
+            1,
             Color(5, 5, 5, 255)
         )
     end
