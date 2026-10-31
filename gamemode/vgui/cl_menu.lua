@@ -73,8 +73,116 @@ function menuStart()
     GW3.teamPanelMenu(teamPanel) --Calling the panel code
 end
 
+-- İlk girişte zorunlu takım seçimi ekranı.
+GW3 = GW3 or {}
+GW3.ForcedTeamSelectionActive = false
+GW3.TeamSelectionPending = false
+
+function GW3.OpenForcedTeamSelection()
+    if IsValid(GW3.ForcedTeamFrame) then
+        GW3.ForcedTeamFrame:MakePopup()
+        return
+    end
+
+    GW3.ForcedTeamSelectionActive = true
+    GW3.TeamSelectionPending = false
+
+    -- Zorunlu secim ekrani acilirken varsa normal F3 menusunu kapat.
+    if IsValid(menu) then
+        menu:Remove()
+        menu = nil
+    end
+
+    -- DFrame kullanmiyoruz: DFrame'in titlebar/client-area inset'i tam ekran
+    -- cizim alanini daraltiyor. Borderless DPanel gercek ekran boyutunda calisir.
+    local frame = vgui.Create("DPanel")
+    GW3.ForcedTeamFrame = frame
+    frame:SetPos(0, 0)
+    frame:SetSize(ScrW(), ScrH())
+    frame:SetZPos(32767)
+    frame:SetKeyboardInputEnabled(true)
+    frame:SetMouseInputEnabled(true)
+    frame:MakePopup()
+
+    -- ESC veya Close cagrisi zorunlu secim ekranini kapatamasin.
+    frame.Close = function() end
+    frame.OnKeyCodePressed = function(self, keyCode)
+        if keyCode == KEY_ESCAPE then return true end
+    end
+
+    frame.Paint = function(self, w, h)
+        self.startTime = self.startTime or SysTime()
+        Derma_DrawBackgroundBlur(self, self.startTime)
+        surface.SetDrawColor(8, 10, 15, 245)
+        surface.DrawRect(0, 0, w, h)
+    end
+
+    local teamPanel = vgui.Create("DPanel", frame)
+    teamPanel:Dock(FILL)
+    teamPanel:DockMargin(0, 0, 0, 0)
+    teamPanel.Paint = function(self, w, h)
+        surface.SetDrawColor(30, 73, 173, 10)
+        surface.DrawRect(0, 0, w / 2, h)
+        surface.SetDrawColor(206, 67, 61, 10)
+        surface.DrawRect(w / 2, 0, w / 2, h)
+
+        draw.SimpleTextOutlined(
+            "CHOOSE YOUR SIDE",
+            "MenuSelectHud3",
+            w / 2,
+            h * 0.12,
+            Color(240, 240, 240),
+            TEXT_ALIGN_CENTER,
+            TEXT_ALIGN_CENTER,
+            2,
+            Color(0, 0, 0, 255)
+        )
+        draw.SimpleTextOutlined(
+            "Select a faction to deploy",
+            "MenuSelectHud2",
+            w / 2,
+            h * 0.16,
+            Color(190, 190, 190),
+            TEXT_ALIGN_CENTER,
+            TEXT_ALIGN_CENTER,
+            1,
+            Color(0, 0, 0, 255)
+        )
+    end
+
+    GW3.teamPanelMenu(teamPanel)
+end
+
+net.Receive("GW3_ForceTeamSelection", function()
+    GW3.OpenForcedTeamSelection()
+end)
+
+net.Receive("GW3_TeamSelectionResult", function()
+    local success = net.ReadBool()
+    local message = net.ReadString()
+    GW3.TeamSelectionPending = false
+
+    if success then
+        GW3.ForcedTeamSelectionActive = false
+        if IsValid(GW3.ForcedTeamFrame) then
+            GW3.ForcedTeamFrame:Remove()
+        end
+        GW3.ForcedTeamFrame = nil
+    end
+
+    if message ~= "" then
+        chat.AddText(
+            success and Color(100, 220, 120) or Color(255, 90, 90),
+            "[GW3] ",
+            Color(235, 235, 235),
+            message
+        )
+    end
+end)
+
 --openning system of the menu, grabbed right from 2.3 
 hook.Add("Think", "MenuKeyOpenner", function()
+    if GW3.ForcedTeamSelectionActive then return end
     if input.IsKeyDown(key) then
         if not IsPressed and CurTime() > cooldown then  -- BURASI EKLENDİ
             IsPressed = true

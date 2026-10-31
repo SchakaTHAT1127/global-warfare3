@@ -1,76 +1,189 @@
 util.AddNetworkString("SendTeam")
---cl_teampanel'den gelen takım değişme network isteği
+util.AddNetworkString("GW3_ForceTeamSelection")
+util.AddNetworkString("GW3_TeamSelectionResult")
 
---kendini açıklıyor
+GW3 = GW3 or {}
+
 local TakimModelleri = {
     [UKR] = "models/morpeh/ukraine_marine2010.mdl",
     [RUS] = "models/4ervo/ml_project/russian_soldier2012.mdl"
 }
 
---[[
-"istenentakim" is the team that the player wanted to be in 
-"digertakim" is the other team
-"finaltakim" is just the final team
-]]
+local function SendTeamSelectionResult(ply, success, message)
+    if not IsValid(ply) then return end
 
-net.Receive("SendTeam", function(len, ply) -- takım değişme isteğini kaptık
-    local istenentakim = net.ReadUInt(2) --istenen takım, 1(ukr) veya 2(rus)
+    net.Start("GW3_TeamSelectionResult")
+        net.WriteBool(success)
+        net.WriteString(message or "")
+    net.Send(ply)
+end
 
-    --[["Eğer istenentakim değişkeni UKR (Ukrayna) ise, local digertakim değişkenine RUS (Rusya) değerini ata.
-    Eğer istenentakim değişkeni UKR değilse (yani başka bir şeyse), o zaman UKR değerini ata."
+local function IsInsideOwnStartingZone(ply)
+    if not IsValid(ply) then return false end
 
-    SATIR SATIR;
-    local digertakim
+    local teamID = ply:Team()
+    local zones = GW3.TeamBarrierZones
+    local zone = zones and zones[teamID]
 
-    if istenentakim == UKR then
-        digertakim = RUS
-    else
-        digertakim = UKR
+    -- Bu kontrol yalnızca mevcut takımı UKR/RUS olan oyuncular için çağrılır.
+    if not zone or not isvector(zone.pos) or not isnumber(zone.radius) then
+        return false
     end
-    ]]
-    if istenentakim == ply:Team() then
-        print("zaten o takımdasın")
-    return end
-    local digertakim = (istenentakim == UKR) and RUS or UKR 
 
-    istenentakimsayi = team.NumPlayers(istenentakim) -- oyuncunun istediği takımın sayısı
-    digertakimsayi = team.NumPlayers(digertakim) -- diğer takımın sayısı
+    return ply:GetPos():DistToSqr(zone.pos) <= zone.radius * zone.radius
+end
 
-    local finaltakim = istenentakim -- final karar takımını istenen takıma veriyor nolur nolmaz diye öylesine
-    print(string.format("Oyuncu: %s | İstediği: %d | Atanan: %d", ply:Nick(), istenentakim, finaltakim))
+-- Takım seçme / takım değiştirme isteği.
+net.Receive("SendTeam", function(_, ply)
+    if not IsValid(ply) or not ply:IsPlayer() then return end
 
-    if istenentakimsayi > digertakimsayi then -- istenen takımda fazla oyuncu varsa öbür takıma atıyor
-        finaltakim = digertakim
-        ply:ChatPrint("Takımlar dengelendiği için " .. team.GetName(digertakim) .. " takımına aktarıldınız.")
-
-    elseif istenentakimsayi < digertakimsayi then -- istenen takımda boş yer varsa istenen takıma atıyor
-        finaltakim = istenentakim
-        ply:ChatPrint(team.GetName(istenentakim) .. " takımına katıldınız.")
-
-    elseif istenentakimsayi == digertakimsayi then -- istenen takımda boş yer varsa istenen takıma atıyor
-        finaltakim = istenentakim
-        ply:ChatPrint(team.GetName(istenentakim) .. " takımına katıldınız.")
+    local requestedTeam = net.ReadUInt(2)
+    if requestedTeam ~= UKR and requestedTeam ~= RUS then
+        SendTeamSelectionResult(ply, false, "Geçersiz takım seçimi.")
+        return
     end
-    ply:SetTeam(finaltakim) -- Oyuncunun takımını final seçilen takım yapıyoz
-    
-    local modelSeti = {
-        [1] = "models/morpeh/ukraine_marine2010.mdl",
-        [2] = "models/4ervo/ml_project/russian_soldier2012.mdl"
-    }
 
-    local model = modelSeti[finaltakim] -- Oyuncunun takımına göre model ayarlıyoruz
+    local currentTeam = ply:Team()
+    local alreadyHasTeam = currentTeam == UKR or currentTeam == RUS
 
-    ply:KillSilent()
+    -- İlk kez takım seçen oyuncu her yerden seçim yapabilir.
+    -- UKR/RUS oyuncusu ise yalnızca KENDİ başlangıç dairesinden takım değiştirebilir.
+    if alreadyHasTeam and requestedTeam ~= currentTeam and not IsInsideOwnStartingZone(ply) then
+        SendTeamSelectionResult(
+            ply,
+            false,
+            "Takım değiştirmek için kendi başlangıç bölgenin içinde olmalısın."
+        )
+        return
+    end
+
+    if requestedTeam == currentTeam then
+        ply.GW3HasSelectedTeam = true
+        SendTeamSelectionResult(ply, true, "Zaten bu takımdasın.")
+        return
+    end
+
+    local otherTeam = requestedTeam == UKR and RUS or UKR
+    local requestedCount = team.NumPlayers(requestedTeam)
+    local otherCount = team.NumPlayers(otherTeam)
+
+    -- Mevcut takımdan ayrılan oyuncuyu sayımdan çıkar.
+    if currentTeam == requestedTeam then
+        requestedCount = requestedCount - 1
+    elseif currentTeam == otherTeam then
+        otherCount = otherCount - 1
+    end
+
+    local finalTeam = requestedTeam
+    if requestedCount > otherCount then
+        finalTeam = otherTeam
+    end
+
+    ply.GW3HasSelectedTeam = true
+    ply:SetTeam(finalTeam)
+
+    local model = TakimModelleri[finalTeam]
+
+    -- Oyuncuyu yeni takımının spawn noktalarında yeniden doğur.
+    if ply:Alive() then
+        ply:KillSilent()
+    end
+
     ply:Spawn()
 
     if model then
-        ply:SetModel(model)
+        timer.Simple(0, function()
+            if IsValid(ply) and ply:Team() == finalTeam then
+                ply:SetModel(model)
+            end
+        end)
     end
 
-    hook.Add("PlayerSpawn", "ModelleriSetle", function(ply)
-        --giving it 1 tick time cuz sometimes it wont work for being "too early"
-        timer.Simple(0, function()
+    local message
+    if finalTeam ~= requestedTeam then
+        message = "Takımlar dengelendiği için " .. team.GetName(finalTeam) .. " takımına aktarıldın."
+    else
+        message = team.GetName(finalTeam) .. " takımına katıldın."
+    end
+
+    ply:ChatPrint(message)
+    SendTeamSelectionResult(ply, true, message)
+
+    -- İlk seçim tamamlandı; zorunlu seçim ekranını tekrar gönderme döngüsünü durdur.
+    local timerName = "GW3_ForceTeamSelection_" .. ply:UserID()
+    if timer.Exists(timerName) then
+        timer.Remove(timerName)
+    end
+end)
+
+-- Takım modelini her doğuşta tek bir hook ile uygula.
+-- Eski kodda her takım değişiminde yeni PlayerSpawn hook'u ekleniyordu;
+-- bu da hook birikmesine ve eski takım modelinin sonradan uygulanmasına neden oluyordu.
+hook.Add("PlayerSpawn", "GW3_ApplyTeamPlayerModel", function(ply)
+    local teamID = ply:Team()
+    local model = TakimModelleri[teamID]
+    if not model then return end
+
+    timer.Simple(0, function()
+        if IsValid(ply) and ply:Team() == teamID then
             ply:SetModel(model)
-        end)
+        end
     end)
+end)
+
+-- İlk girişte oyuncuyu takım seçilene kadar kilitle ve seçim ekranını yeniden gönder.
+hook.Add("PlayerInitialSpawn", "GW3_RequireInitialTeamSelection", function(ply)
+    ply.GW3HasSelectedTeam = false
+    ply:SetTeam(TEAM_UNASSIGNED)
+
+    local timerName = "GW3_ForceTeamSelection_" .. ply:UserID()
+    timer.Create(timerName, 3, 0, function()
+        if not IsValid(ply) then
+            timer.Remove(timerName)
+            return
+        end
+
+        if ply.GW3HasSelectedTeam or ply:Team() == UKR or ply:Team() == RUS then
+            ply.GW3HasSelectedTeam = true
+            timer.Remove(timerName)
+            return
+        end
+
+        net.Start("GW3_ForceTeamSelection")
+        net.Send(ply)
+    end)
+end)
+
+local function HasSelectedTeam(ply)
+    if ply.GW3HasSelectedTeam then return true end
+
+    -- Lua dosyası sunucu açıkken yenilenirse mevcut UKR/RUS oyuncularını kilitleme.
+    local teamID = ply:Team()
+    if teamID == UKR or teamID == RUS then
+        ply.GW3HasSelectedTeam = true
+        return true
+    end
+
+    return false
+end
+
+-- Zorunlu takım seçimi tamamlanana kadar oyuncu hareket edemez.
+hook.Add("SetupMove", "GW3_LockUntilTeamSelected", function(ply, mv)
+    if HasSelectedTeam(ply) then return end
+
+    mv:SetOrigin(ply:GetPos())
+    mv:SetVelocity(vector_origin)
+end)
+
+hook.Add("PlayerUse", "GW3_BlockUseUntilTeamSelected", function(ply)
+    if not HasSelectedTeam(ply) then
+        return false
+    end
+end)
+
+hook.Add("PlayerDisconnected", "GW3_ClearTeamSelectionTimer", function(ply)
+    local timerName = "GW3_ForceTeamSelection_" .. ply:UserID()
+    if timer.Exists(timerName) then
+        timer.Remove(timerName)
+    end
 end)

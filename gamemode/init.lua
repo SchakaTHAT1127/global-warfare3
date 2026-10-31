@@ -82,50 +82,6 @@ team.SetUp(RUS, "Russian Ground Forces", Color(223, 8, 8))
 hook.Add("CanPlayerSuicide", "stopSuicide", function(ply)
     return true
 end)
---[[
---Burada, oyuncunun takımına göre girebileceği araçları ayarlıyoruz.
-hook.Add( "CanPlayerEnterVehicle", "PrintPlayersInVehicles", function( ply, veh, role )
-    local parentVehicle = veh:GetParent() --LVS araçlarında koltuk vehicleleri vardır, ana parenti olan aracı alıyoz ki genelleme olsun
-    local team = ply:Team()
-
-    if not IsValid(parentVehicle) then return false end 
-
-    --Ukraynanın girebildikleri
-    local ukrVehicleList = {
-        "sw_gaz66",
-        "sw_uaz469",
-        "sw_btr60"
-    }
-
-    --rusyanın girebildikleri
-    local rusVehicleList = {
-        "sw_ural4320",
-        "sw_gaz2330",
-        "sw_btr82",
-        "sw_mtlb"
-    }
-
-    --Eğer takım 1(Ukrayna) ise isim ve data(class) olarak
-    if team == 1 then
-        for _, data in ipairs(ukrVehicleList) do -- Birini seçtik
-            if parentVehicle:GetClass() == data then -- Binmeye çalıştığı aracın adı datadaki isimle aynı mı diye baktık
-                return true -- öyleyse okey dedik bin dedik
-            end
-        end
-        return false --değilse çöpe attık
-
-    elseif team == 2 then -- aynısı yukardakinin
-        for _, data in ipairs(rusVehicleList) do
-            if parentVehicle:GetClass() == data then
-                return true
-            end
-        end
-        return false 
-
-    else -- hata durumda binemesin
-        return false
-    end
-end )]]
 
 hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikten sonra ticketleri tekrar setliyoruz, ve her takıma score olarak ticketleri koyuyoruz. 
     print("InitPostEntity")
@@ -425,6 +381,10 @@ local TeamBarriers = {
     }
 }
 
+-- Aynı başlangıç daireleri takım değiştirme kontrolünde de kullanılır.
+-- Böylece bariyer çizimi / hareket kilidi ve takım değiştirme alanı aynı koordinatları kullanır.
+GW3.TeamBarrierZones = TeamBarriers
+
 local barrierEnd = {
     [1] = 0,
     [2] = 0
@@ -454,58 +414,91 @@ local function SyncBarriers(target)
     end
 end
 
--- BARİYER SİSTEMİNİ BAŞLAT
-function GW3.StartTeamBarriers()
-
-    participants[1] = {}
-    participants[2] = {}
-
-    for _, ply in ipairs(player.GetAll()) do
-        local teamID = ply:Team()
-        local data = TeamBarriers[teamID]
-
-        if data and ply:GetPos():DistToSqr(data.pos) <= data.radius ^ 2 then
-            participants[teamID][ply] = true
-        end
-    end
-
-    barrierEnd[1] = CurTime() + 30
-    barrierEnd[2] = CurTime() + 30
-
-    SyncBarriers()
-end
-
--- KÜREDEN ÇIKMAYI ENGELLE
-hook.Add("SetupMove", "GW3_TeamBarrierBlock", function(ply, mv)
+-- Oyuncunun aktif bariyer içindeki kendi takım spawnında olup olmadığını
+-- kontrol eder. Takım değiştirip yeniden doğan oyuncuları da kapsar.
+local function RegisterBarrierParticipant(ply, position)
+    if not IsValid(ply) or not ply:IsPlayer() then return false end
 
     local teamID = ply:Team()
     local data = TeamBarriers[teamID]
 
-    if not data then return end
-    if CurTime() >= barrierEnd[teamID] then return end
-    if not participants[teamID][ply] then return end
+    if not data or CurTime() >= barrierEnd[teamID] then return false end
+
+    local origin = position or ply:GetPos()
+    if origin:DistToSqr(data.pos) > data.radius ^ 2 then return false end
+
+    participants[teamID][ply] = true
+    return true
+end
+
+-- BARİYER SİSTEMİNİ BAŞLAT
+function GW3.StartTeamBarriers()
+    participants[1] = {}
+    participants[2] = {}
+
+    barrierEnd[1] = CurTime() + 90
+    barrierEnd[2] = CurTime() + 90
+
+    for _, ply in ipairs(player.GetAll()) do
+        RegisterBarrierParticipant(ply)
+    end
+
+    SyncBarriers()
+end
+
+-- Bariyer açıkken doğan veya takım değiştirerek yeniden doğan oyuncuyu
+-- yeni takımının spawn küresine kaydet. Spawn konumu diğer hook tarafından
+-- bir sonraki tick'te ayarlandığı için kısa bir gecikme kullanıyoruz.
+hook.Add("PlayerSpawn", "GW3_TeamBarrierRegisterSpawn", function(ply)
+    timer.Simple(0.1, function()
+        if IsValid(ply) then
+            RegisterBarrierParticipant(ply)
+        end
+    end)
+end)
+
+-- KÜREDEN ÇIKMAYI ENGELLE
+hook.Add("SetupMove", "GW3_TeamBarrierBlock", function(ply, mv)
+    local teamID = ply:Team()
+    local data = TeamBarriers[teamID]
+
+    if not data or CurTime() >= barrierEnd[teamID] then return end
+
+    -- SetTeam() sonrası oyuncu yeni takımın listesinde bulunmayabilir.
+    -- Yeni takım spawnının içindeyse burada kaydedilir; böylece bariyer
+    -- takım değiştirerek veya spawn sonrası hareket ederek aşılamaz.
+    if not participants[teamID][ply] then
+        if not RegisterBarrierParticipant(ply, mv:GetOrigin())
+        and not RegisterBarrierParticipant(ply, ply:GetPos()) then
+            return
+        end
+    end
 
     local center = data.pos
-    local maxRadius = data.radius - 16
-
+    local maxRadius = math.max(data.radius - 16, 0)
     local offset = mv:GetOrigin() - center
-    local distance = offset:Length()
 
-    if distance > maxRadius then
+    if offset:LengthSqr() > maxRadius * maxRadius then
         local direction = offset:GetNormalized()
-
         mv:SetOrigin(center + direction * maxRadius)
 
         local velocity = mv:GetVelocity()
         local outwardSpeed = velocity:Dot(direction)
 
+        -- Duvara doğru olan hızı kes, duvara paralel hareketi koru.
         if outwardSpeed > 0 then
             mv:SetVelocity(velocity - direction * outwardSpeed)
         end
     end
 end)
 
--- SONRADAN GİREN OYUNCULARA BİLGİ GÖNDER
+-- Oyuncu ayrıldığında tablo referanslarını temizle.
+hook.Add("PlayerDisconnected", "GW3_TeamBarrierCleanup", function(ply)
+    participants[1][ply] = nil
+    participants[2][ply] = nil
+end)
+
+-- SONRADAN GİREN OYUNCULARA BARİYER DURUMUNU GÖNDER
 hook.Add("PlayerInitialSpawn", "GW3_TeamBarrierSync", function(ply)
     timer.Simple(1, function()
         if IsValid(ply) then
@@ -513,15 +506,114 @@ hook.Add("PlayerInitialSpawn", "GW3_TeamBarrierSync", function(ply)
         end
     end)
 end)
+
+local teamVehicleList = {
+    [1] = {
+        ["sw_gaz66"] = true,
+        ["sw_uaz469"] = true,
+        ["sw_btr60"] = true,
+        ["lvs_trailer_zis3"] = true,
+        ["lvs_trailer_dshk_12mm"] = true,
+        ["sw_kord"] = true,
+        ["2vt40"] = true
+    },
+
+    [2] = {
+        ["sw_ural4320"] = true,
+        ["sw_gaz2330"] = true,
+        ["sw_btr82"] = true,
+        ["lvs_trailer_zis3"] = true,
+        ["lvs_trailer_dshk_12mm"] = true,
+        ["sw_kord"] = true,
+        ["2vt40"] = true
+    }
+}
+
+local function IsTeamVehicle(vehicle, teamID)
+    if not IsValid(vehicle) then return false end
+
+    local allowedVehicles = teamVehicleList[teamID]
+    if not allowedVehicles then return false end
+
+    local current = vehicle
+
+    -- LVS koltuklarının parent zincirini kontrol et.
+    for i = 1, 8 do
+        if not IsValid(current) then break end
+
+        if allowedVehicles[current:GetClass()] then
+            return true
+        end
+
+        local parent = current:GetParent()
+
+        if not IsValid(parent) or parent == game.GetWorld() or parent == current then
+            break
+        end
+
+        current = parent
+    end
+
+    return false
+end
+
 hook.Add("CanPlayerEnterVehicle", "GW3_TeamBarrierNoVehicle", function(ply, vehicle)
+    if not IsValid(ply) or not IsValid(vehicle) then return false end
 
     local teamID = ply:Team()
 
-    if barrierEnd[teamID] and CurTime() < barrierEnd[teamID] then
-        if participants[teamID] and participants[teamID][ply] then
+    -- Her zaman kendi takımının araçlarına izin ver.
+    if not IsTeamVehicle(vehicle, teamID) then
+        return false
+    end
+
+    -- Bariyer hâlâ aktif mi?
+    local endTime = barrierEnd and barrierEnd[teamID]
+
+    local barrierActive =
+        TeamBarriers and
+        TeamBarriers[teamID] and
+        type(endTime) == "number" and
+        CurTime() < endTime
+
+    if barrierActive then
+        -- Kayıt yoksa oluştur.
+        RegisterBarrierParticipant(ply)
+
+        -- Bariyer katılımcıları araç kullanamaz.
+        if participants and participants[teamID] and participants[teamID][ply] then
             return false
         end
     end
 
+    -- İzin verilen araçlarda diğer hook'ların da çalışmasına izin ver.
+    return nil
 end)
+
 GW3.StartTeamBarriers()
+
+-- HER SPAWNDA CROWBAR VER, SANDBOX ARAÇLARINI ENVANTERDEN KALDIR
+-- PlayerLoadout hook'u sandbox'ın varsayılan yüklemesini engellemez;
+-- timer.Simple(0), varsayılan yükleme tamamlandıktan sonra çalışır.
+local GW3_RemoveOnSpawn = {
+    "weapon_physgun",
+    "gmod_tool",
+    "gmod_camera"
+}
+
+hook.Add("PlayerLoadout", "GW3_CustomSpawnLoadout", function(ply)
+    timer.Simple(0, function()
+        if not IsValid(ply) then return end
+
+        for _, weaponClass in ipairs(GW3_RemoveOnSpawn) do
+            if ply:HasWeapon(weaponClass) then
+                ply:StripWeapon(weaponClass)
+            end
+        end
+
+        -- Her doğuşta crowbar envanterinde bulunsun.
+        if not ply:HasWeapon("wep_gmod_tilifon") then
+            ply:Give("wep_gmod_tilifon")
+        end
+    end)
+end)

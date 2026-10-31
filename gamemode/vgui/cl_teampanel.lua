@@ -1,6 +1,21 @@
 AddCSLuaFile("../shared.lua")
 GW3 = GW3 or {}
 
+local function RequestTeamSelection(teamID)
+    if GW3.TeamSelectionPending then return end
+
+    GW3.TeamSelectionPending = true
+
+    net.Start("SendTeam")
+        net.WriteUInt(teamID, 2)
+    net.SendToServer()
+
+    if GW3.uiSound then
+        GW3.uiSound("button")
+        GW3.uiSound("team")
+    end
+end
+
 function GW3.teamPanelMenu(parentPanel)
     local panel = parentPanel
 
@@ -21,11 +36,7 @@ function GW3.teamPanelMenu(parentPanel)
     DermaButton:SetPos(ScrW() * 0.25 - (nW / 2), ScrH() / 2.5 - (nH / 2) + nH + 12)
     DermaButton:SetSize(nW, 30)
     DermaButton.DoClick = function()
-        net.Start( "SendTeam" )
-            net.WriteUInt(1,2) -- UKR (1), 2 BIT
-        net.SendToServer()
-        GW3.uiSound("button")
-        GW3.uiSound("team")
+        RequestTeamSelection(1) -- UKR
     end
     DermaButton.Paint = function(self, w, h)
         surface.SetDrawColor(8, 8, 8, 215)
@@ -52,11 +63,7 @@ function GW3.teamPanelMenu(parentPanel)
     DermaButton:SetPos(ScrW() * 0.75 - (sW / 2), ScrH() / 2.5 - (sH / 2) + sH + 12) -- Hiçbir fikrim yok
     DermaButton:SetSize(nW, 30)
     DermaButton.DoClick = function()
-        net.Start( "SendTeam" )
-            net.WriteUInt(2,2) -- RUS (2), 2 BIT
-        net.SendToServer()  
-        GW3.uiSound("button")
-        GW3.uiSound("team")
+        RequestTeamSelection(2) -- RUS
     end
 
     DermaButton.Paint = function(self, w, h)

@@ -237,30 +237,35 @@ local enemyHaloColor = Color(255, 0, 0)
 local zoneOneRadiusSqr = baskatable[1].radius * baskatable[1].radius
 local zoneTwoRadiusSqr = baskatable[2].radius * baskatable[2].radius
 
+-- Rakip spawnına girmiş oyuncu hem halo listesine eklenir hem de
+-- kendi ekranında uyarı görür.
+local function IsPlayerInEnemySpawn(ply)
+    if not IsValid(ply) or not ply:IsPlayer() or not ply:Alive() then
+        return false
+    end
+
+    local teamID = ply:Team()
+    local plyPos = ply:GetPos()
+
+    if teamID == 2 then
+        return plyPos:DistToSqr(baskatable[1].pos) <= zoneOneRadiusSqr
+    elseif teamID == 1 then
+        return plyPos:DistToSqr(baskatable[2].pos) <= zoneTwoRadiusSqr
+    end
+
+    return false
+end
+
 hook.Add("PreDrawHalos", "GW3_EnemyZoneWallhack", function()
     local now = CurTime()
 
     if now >= nextHaloRefresh then
         nextHaloRefresh = now + haloRefreshInterval
-
-        for i = #glowingPlayers, 1, -1 do
-            glowingPlayers[i] = nil
-        end
+        table.Empty(glowingPlayers)
 
         for _, ply in ipairs(player.GetAll()) do
-            if not IsValid(ply) or not ply:Alive() then continue end
-
-            local teamID = ply:Team()
-            local plyPos = ply:GetPos()
-
-            if teamID == 2 then
-                if plyPos:DistToSqr(baskatable[1].pos) <= zoneOneRadiusSqr then
-                    glowingPlayers[#glowingPlayers + 1] = ply
-                end
-            elseif teamID == 1 then
-                if plyPos:DistToSqr(baskatable[2].pos) <= zoneTwoRadiusSqr then
-                    glowingPlayers[#glowingPlayers + 1] = ply
-                end
+            if IsPlayerInEnemySpawn(ply) then
+                glowingPlayers[#glowingPlayers + 1] = ply
             end
         end
     end
@@ -268,4 +273,35 @@ hook.Add("PreDrawHalos", "GW3_EnemyZoneWallhack", function()
     if #glowingPlayers > 0 then
         halo.Add(glowingPlayers, enemyHaloColor, 1, 1, 1, true, true)
     end
+end)
+
+-- Yalnızca rakip spawnında bulunup parlayan oyuncunun ekranında görünür.
+hook.Add("HUDPaint", "GW3_EnemySpawnGlowWarning", function()
+    local ply = LocalPlayer()
+    if not IsPlayerInEnemySpawn(ply) then return end
+
+    local centerX = ScrW() / 2
+    draw.SimpleTextOutlined(
+        "PARLIYORSUN!",
+        "Trebuchet24",
+        centerX,
+        105,
+        Color(255, 55, 55),
+        TEXT_ALIGN_CENTER,
+        TEXT_ALIGN_CENTER,
+        2,
+        Color(0, 0, 0, 230)
+    )
+
+    draw.SimpleTextOutlined(
+        "Düşman spawn bölgesinde tespit ediliyorsun.",
+        "Trebuchet18",
+        centerX,
+        132,
+        Color(255, 255, 255),
+        TEXT_ALIGN_CENTER,
+        TEXT_ALIGN_CENTER,
+        1,
+        Color(0, 0, 0, 230)
+    )
 end)
