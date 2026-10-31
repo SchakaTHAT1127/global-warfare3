@@ -60,6 +60,9 @@ net.Receive("SendTeam", function(len, ply) -- takım değişme isteğini kaptık
 
     local model = modelSeti[finaltakim] -- Oyuncunun takımına göre model ayarlıyoruz
 
+    ply:KillSilent()
+    ply:Spawn()
+
     if model then
         ply:SetModel(model)
     end
