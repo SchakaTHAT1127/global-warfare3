@@ -12,9 +12,7 @@ entAraclarRusya = {
 local SunucuMapi = game.GetMap()
 
 local MaplerVeKoordinatlar = {
-    ["wid_peremen"] = { pos = Vector(-14322.014648, -2026.330566, -767.968750), ang = Angle(0, 90, 0) },
-    ["prm_hrabske"] = { pos = Vector(-14322.014648, -2026.330566, -767.968750), ang = Angle(0, 90, 0) },
-    ["prm_molodoy"] = { pos = Vector(-14322.014648, -2026.330566, -767.968750), ang = Angle(0, 90, 0) }
+    ["wid_peremen"] = { pos = Vector(-14322.014648, -2026.330566, -767.968750), ang = Angle(0, 90, 0) }
 }
 
 local AracCord = MaplerVeKoordinatlar[SunucuMapi] 

@@ -87,24 +87,6 @@ function progressDone(targetEnt)
 end
 
 -- this code makes you see the information in person
-hook.Add("HUDPaint", "DrawCrateHint_2", function()
-    for _, ent in ipairs(ents.FindByClass("ent_radcrate")) do
-        if IsValid(ent) then
-            local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
-            if distance < 350 then
-                local worldPos = ent:GetPos() + Vector(0, 0, 10)
-                local screenData = worldPos:ToScreen()
-                if screenData.visible then
-                    local x, y = screenData.x, screenData.y
-                    draw.RoundedBox(4, x-170, y - 13, 340, 25, Color(0, 0, 0, 150))
-                    draw.SimpleText("Open box to get radio equipment", "TargetID", x, y, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    draw.SimpleText("Press Walk (ALT) + Use", "LabelHud1", x, y + 25, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                end
-            end
-        end
-    end
-end)
-
 net.Receive("alertClientAboutUse", function()
     print("i receiv")
     local targetEnt = net.ReadEntity()

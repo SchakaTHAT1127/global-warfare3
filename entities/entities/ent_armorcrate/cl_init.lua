@@ -7,27 +7,6 @@ function ENT:Draw()
 end
 
 -- this code makes you see the information in person
-hook.Add("HUDPaint", "DrawCrateHint_armorUKR", function()
-    for _, ent in ipairs(ents.FindByClass("ent_armorcrate")) do
-        if IsValid(ent) then
-            local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
-            if distance < 300 then
-                -- receving the logistic amount
-                logisticAmount = ent:GetNWInt("armorUKRLogisticAmount", 0) 
-                local worldPos = ent:GetPos() + Vector(0, 0,25)
-                local screenData = worldPos:ToScreen()
-                if screenData.visible then
-                    local x, y = screenData.x, screenData.y
-                    draw.RoundedBox(4, x-170, y - 13, 340, 25, Color(0, 0, 0, 150))
-                    draw.SimpleText("Ukranian Armor Box", "TargetID", x, y, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    draw.RoundedBox(4, x-90, y+23, 180, 25, Color(0, 33, 203, 90))
-                    draw.SimpleText("Amount: " .. logisticAmount, "TargetID", x, y + 36, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    draw.SimpleText("Press Walk (ALT) + Use", "LabelHud1", x, y + 60, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                end
-            end
-        end
-    end
-end)
 -- the logistic menu frame, the panel code located in cl_logipanel
 function logisticMenuStartArmorUKR(targetEntity)
 
@@ -82,7 +61,7 @@ function logisticMenuStartArmorUKR(targetEntity)
     end
 
     lSheet:AddSheet("   Ukranian Armor Box   ", logiPanel, "icon16/report.png")
-    print("benim cl_init, aldığım miktar;" ..logisticAmount)
+    logisticAmount = IsValid(targetEntity) and targetEntity:GetNWInt("armorUKRLogisticAmount", 0) or 0
 
     -- calling the panel code, i use this for no spagetti code
     GW3.logiPanelMenuArmorUKR(logiPanel, logiLocation, targetEntity, logisticAmount)

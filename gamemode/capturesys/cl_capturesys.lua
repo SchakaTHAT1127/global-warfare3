@@ -103,17 +103,13 @@ else
             surface.DrawRect(0, 0, w, h)
             local time = RealTime() * 2
 
-            for x = 0, w do
-                -- Soldan sağa x eksenine ve zamana bağlı dalga hesabı (0 ile 1 arasında değer üretir)
-                local wave = (math.sin(x * 0.05 - time) + 1) / 2
-
-                -- Dalga bazlı iki renk arasında geçiş yapıyoruz (Örn: Mavi - Parlak Turkuaz)
-                local r = Lerp(wave, 0, 0)
+            for x = 0, w, 4 do
+                local wave = (math.sin((x + 2) * 0.05 - time) + 1) / 2
                 local g = Lerp(wave, 120, 180)
-                local b = Lerp(wave, 255, 255)
+                local stripWidth = math.min(4, w - x)
 
-                surface.SetDrawColor(r, g, b, 200)
-                surface.DrawRect(x, 0, 1, h) -- 1 piksel genişliğinde dikey çizgiler çizer
+                surface.SetDrawColor(0, g, 255, 200)
+                surface.DrawRect(x, 0, stripWidth, h)
             end
         end
 
@@ -128,18 +124,15 @@ else
 
             local time = RealTime() * 2 -- Hız ayarı
 
-            -- Soldan sağa şeritler halinde çizim
-            for x = 0, w do
-                -- Sinüs dalgası (0 ile 1 arası değer üretir)
-                local wave = (math.sin(x * 0.05 - time) + 1) / 2
-
-                -- Koyu Kırmızı (145, 10, 20) ile Parlak Kırmızı/Mercan (255, 60, 40) arasında geçiş
+            for x = 0, w, 4 do
+                local wave = (math.sin((x + 2) * 0.05 - time) + 1) / 2
                 local r = Lerp(wave, 145, 255)
                 local g = Lerp(wave, 10, 60)
                 local b = Lerp(wave, 20, 40)
+                local stripWidth = math.min(4, w - x)
 
                 surface.SetDrawColor(r, g, b, 200)
-                surface.DrawRect(x, 0, 1, h)
+                surface.DrawRect(x, 0, stripWidth, h)
             end
         end
 
@@ -187,10 +180,11 @@ else
         end
     end
 
-    hook.Add("PostDrawTranslucentRenderables", "VisualizeAllSpheres", function()
-        if not KureMaterial then return end
-        render.SetMaterial(KureMaterial) 
-        for kureAdi, kure in pairs(aktifKureler) do
+    hook.Add("PostDrawTranslucentRenderables", "VisualizeAllSpheres", function(depth, skybox)
+        if depth or skybox or not KureMaterial or not next(aktifKureler) then return end
+
+        render.SetMaterial(KureMaterial)
+        for _, kure in pairs(aktifKureler) do
             render.DrawSphere(kure.pos, -kure.radius, 6, 6, kure.color)
             render.DrawSphere(kure.pos, kure.radius, 6, 6, kure.color)
         end

@@ -12,7 +12,7 @@ entAraclarUkrayna = {
 local SunucuMapi = game.GetMap()
 
 local MaplerVeKoordinatlar = {
-    ["wid_peremen"] = { pos = Vector(9332, -11245, -47), ang = Angle(0, 180, 0) },
+    ["wid_peremen"] = { pos = Vector(12156.296875, -13695.033203 ,-47.973808), ang = Angle(0, 90, 0) },
 }
 
 local AracCord = MaplerVeKoordinatlar[SunucuMapi] 
@@ -39,10 +39,10 @@ function SpawnVehicleUkraynaInitial()
         for i = 1, entAraclarUkrayna[name].getMiktar() do
             local GeciciPosUkr = Vector(AracCord.pos.x, AracCord.pos.y, AracCord.pos.z)
             
-            GeciciPosUkr.x = GeciciPosUkr.x + aktifOffset
+            GeciciPosUkr.y = GeciciPosUkr.y + aktifOffset
 
             while not KordinatBos(GeciciPosUkr) do
-                GeciciPosUkr.x = GeciciPosUkr.x + 300
+                GeciciPosUkr.y = GeciciPosUkr.y + 300
                 aktifOffset = aktifOffset + 300
             end
 
@@ -70,7 +70,7 @@ local function SpawnVehicleUkrayna(entityClass)
     local GeciciPosUkr = Vector(AracCord.pos.x, AracCord.pos.y, AracCord.pos.z)
 
     while not KordinatBos(GeciciPosUkr) do
-        GeciciPosUkr.x = GeciciPosUkr.x + 300
+        GeciciPosUkr.y = GeciciPosUkr.y + 300
         ACseferSayisi = ACseferSayisi + 1
     end
 
@@ -83,7 +83,7 @@ local function SpawnVehicleUkrayna(entityClass)
     end
 
     ACseferSayisi = ACseferSayisi * 300
-    GeciciPosUkr.x = GeciciPosUkr.x - ACseferSayisi
+    GeciciPosUkr.y = GeciciPosUkr.y - ACseferSayisi
     ACseferSayisi = 0
 end
 

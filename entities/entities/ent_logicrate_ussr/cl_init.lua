@@ -8,28 +8,6 @@ function ENT:Draw()
 end
 
 -- Bilgileri görmeni sağlayan şey
-hook.Add("HUDPaint", "DrawCrateHint_3", function()
-    for _, ent in ipairs(ents.FindByClass("ent_logicrate_ussr")) do
-        if IsValid(ent) then
-            local distance = LocalPlayer():GetPos():Distance(ent:GetPos())
-            if distance < 300 then
-                -- receving the logistic amount
-                logisticAmountRus = ent:GetNWInt("logisticAmountRus", 0) 
-                local worldPos = ent:GetPos() + Vector(0, 0,25)
-                local screenData = worldPos:ToScreen()
-                if screenData.visible then
-                    local x, y = screenData.x, screenData.y
-                    draw.RoundedBox(4, x-120, y - 13, 240, 25, Color(0, 0, 0, 150))
-                    draw.SimpleText("Russian Logistics Crate", "TargetID", x, y, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    draw.RoundedBox(4, x-90, y+23, 180, 25, Color(236,67,61,150))
-                    draw.SimpleText("Amount: " .. logisticAmountRus, "TargetID", x, y + 36, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                    draw.SimpleText("Press Walk (ALT) + Use", "LabelHud1", x, y + 60, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                end
-            end
-        end
-    end
-end)
-
 -- the logistic menu frame, the panel code located in cl_logipanel
 function logisticMenuStartRus(targetEntity)
 
@@ -85,7 +63,7 @@ function logisticMenuStartRus(targetEntity)
     end
 
     lSheet:AddSheet("   Logistic Crate   ", logiPanel, "icon16/report.png")
-    print("benim cl_init, aldığım miktar;" ..logisticAmountRus)
+    logisticAmountRus = IsValid(targetEntity) and targetEntity:GetNWInt("logisticAmountRus", 0) or 0
 
     -- Panel kodunu çağırıyom karmançorman olmasın diye paneli oraya aktardım
     GW3.logiPanelMenuRus(logiPanel, logiLocation_rus, targetEntity, logisticAmountRus)

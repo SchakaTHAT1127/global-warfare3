@@ -34,21 +34,19 @@ else
 
     net.Receive("alertServerKureler", function(len, ply)
         isim = net.ReadString()
-        local plyTeam = net.ReadInt(16)
+        net.ReadInt(16) -- Team is checked on the server instead of trusting the client.
 
         local kure = aktifKureler[isim]
-        local ukrOyuncu = kure.kureOyuncuSayisiUKR
-        local rusOyuncu = kure.kureOyuncuSayisiRUS
-        local ukrPointGiver = 1
-        local rusPointGiver = 1
+        if not kure or not IsValid(ply) then return end
 
-        ukrPointGiver = math.ceil(ukrOyuncu / 2)
-        print("UKR OYUNCU SAYISI: " .. ukrOyuncu .. " UKR POINT KATSAYISI: " .. ukrPointGiver)
+        local plyTeam = ply:Team()
+        if plyTeam ~= UKR and plyTeam ~= RUS then return end
+        if ply:GetPos():DistToSqr(kure.pos) > kure.radius * kure.radius then return end
 
-        rusPointGiver = math.ceil(rusOyuncu / 2)
-        print("RUS OYUNCU SAYISI: " .. rusOyuncu .. " RUS POINT KATSAYISI: " .. rusPointGiver)
-
-        if not kure then return end
+        local ukrOyuncu = kure.kureOyuncuSayisiUKR or 0
+        local rusOyuncu = kure.kureOyuncuSayisiRUS or 0
+        local ukrPointGiver = math.ceil(ukrOyuncu / 2)
+        local rusPointGiver = math.ceil(rusOyuncu / 2)
 
         if plyTeam == UKR then
             if kure.rusCapPoint <= 0 then
@@ -72,12 +70,10 @@ else
 
         local function ukrEkle()
             kure.kureOyuncuSayisiUKR = math.max(0, kure.kureOyuncuSayisiUKR + sayiGirdi)
-            print(kure.kureOyuncuSayisiUKR)
         end
 
         local function rusEkle()
             kure.kureOyuncuSayisiRUS = math.max(0, kure.kureOyuncuSayisiRUS + sayiGirdi)
-            print(kure.kureOyuncuSayisiRUS)
         end
 
         local tabloEkleyici = {
@@ -97,12 +93,10 @@ else
 
         local function ukrCikar()
             kure.kureOyuncuSayisiUKR = math.max(0, kure.kureOyuncuSayisiUKR + sayiCikti)
-            print(kure.kureOyuncuSayisiUKR)
         end
 
         local function rusCikar()
             kure.kureOyuncuSayisiRUS = math.max(0, kure.kureOyuncuSayisiRUS + sayiCikti)
-            print(kure.kureOyuncuSayisiRUS)
         end
 
         local tabloEkleyici = {
@@ -116,6 +110,33 @@ else
     end)
 
     local nextCheck = 0
+    local lastSentData = {}
+
+    local function SendCaptureData(kureName, kure, recipient)
+        net.Start("updateClientKureData")
+            net.WriteString(kureName)
+            net.WriteString(kure.flag)
+            net.WriteInt(kure.controlledByTeam, 16)
+            net.WriteInt(kure.ukraineCapPoint, 16)
+            net.WriteInt(kure.rusCapPoint, 16)
+            net.WriteInt(kure.kureOyuncuSayisiUKR, 7)
+            net.WriteInt(kure.kureOyuncuSayisiRUS, 7)
+        if recipient then
+            net.Send(recipient)
+        else
+            net.Broadcast()
+        end
+    end
+
+    hook.Add("PlayerInitialSpawn", "GW3_SendCaptureStateToJoiningPlayer", function(ply)
+        timer.Simple(1, function()
+            if not IsValid(ply) then return end
+
+            for kureName, kure in pairs(aktifKureler) do
+                SendCaptureData(kureName, kure, ply)
+            end
+        end)
+    end)
 
     hook.Add("Think", "controlledByTeamModifier", function()
         if CurTime() < nextCheck then return end
@@ -143,10 +164,10 @@ else
                         end
                     elseif sv_resourcecontrol:GetInt() == 1 then
                         if kure.controlledByTeam == RUS then
-                            UKRticket = UKRticket + 35
-                            RUSticket = RUSticket - 45
+                            UKRticket = UKRticket + 30
+                            RUSticket = RUSticket - 20
                         else
-                            UKRticket = UKRticket + 70
+                            UKRticket = UKRticket + 20
                         end
                     end
 
@@ -165,7 +186,7 @@ else
                     kure.ticketvermeSuresiUKR = (kure.ticketvermeSuresiUKR or 0) + 1
 
                     -- 60 döngü = 12 saniye (0.2s * 60)
-                    if kure.ticketvermeSuresiUKR >= 60 then
+                    if kure.ticketvermeSuresiUKR >= 180 then
                         UKRticket = UKRticket + kure.ticketverenUKR
                         team.SetScore(1, UKRticket)
                         kure.ticketvermeSuresiUKR = 0
@@ -189,10 +210,10 @@ else
                         end
                     elseif sv_resourcecontrol:GetInt() == 1 then
                         if kure.controlledByTeam == UKR then
-                            UKRticket = UKRticket - 45
-                            RUSticket = RUSticket + 35
+                            UKRticket = UKRticket - 20
+                            RUSticket = RUSticket + 30
                         else
-                            RUSticket = RUSticket + 70
+                            RUSticket = RUSticket + 20
                         end
                     end
 
@@ -208,7 +229,7 @@ else
                     kure.ticketverenRUS = math.ceil(rusOyuncu / 2)
                     kure.ticketvermeSuresiRUS = (kure.ticketvermeSuresiRUS or 0) + 1
 
-                    if kure.ticketvermeSuresiRUS >= 60 then
+                    if kure.ticketvermeSuresiRUS >= 180 then
                         RUSticket = RUSticket + kure.ticketverenRUS
                         team.SetScore(2, RUSticket)
                         kure.ticketvermeSuresiRUS = 0
@@ -220,16 +241,28 @@ else
                 kure.ticketvermeSuresiRUS = 0
             end
 
-            -- Tüm oyunculara güncel küre durumunu gönder
-            net.Start("updateClientKureData")
-                net.WriteString(isim2)
-                net.WriteString(kure.flag)
-                net.WriteInt(kure.controlledByTeam, 16)
-                net.WriteInt(kure.ukraineCapPoint, 16)
-                net.WriteInt(kure.rusCapPoint, 16)
-                net.WriteInt(kure.kureOyuncuSayisiUKR, 7)
-                net.WriteInt(kure.kureOyuncuSayisiRUS, 7)
-            net.Broadcast()
+            -- Send only when the data changed. Otherwise each idle zone would
+            -- broadcast the same packet to every player five times per second.
+            local previous = lastSentData[isim2]
+            local changed = not previous
+                or previous.flag ~= kure.flag
+                or previous.controlledByTeam ~= kure.controlledByTeam
+                or previous.ukraineCapPoint ~= kure.ukraineCapPoint
+                or previous.rusCapPoint ~= kure.rusCapPoint
+                or previous.kureOyuncuSayisiUKR ~= kure.kureOyuncuSayisiUKR
+                or previous.kureOyuncuSayisiRUS ~= kure.kureOyuncuSayisiRUS
+
+            if changed then
+                SendCaptureData(isim2, kure)
+                lastSentData[isim2] = {
+                    flag = kure.flag,
+                    controlledByTeam = kure.controlledByTeam,
+                    ukraineCapPoint = kure.ukraineCapPoint,
+                    rusCapPoint = kure.rusCapPoint,
+                    kureOyuncuSayisiUKR = kure.kureOyuncuSayisiUKR,
+                    kureOyuncuSayisiRUS = kure.kureOyuncuSayisiRUS,
+                }
+            end
         end
     end)
 end
