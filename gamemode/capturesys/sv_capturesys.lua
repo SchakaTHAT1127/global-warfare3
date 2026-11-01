@@ -4,15 +4,15 @@ else
     ModeKurelerTablesi = {
         ["wid_peremen"] = {
             Kureler = {
-                ["TokiKure"]   = { pos = Vector(-200.405151, 3079.191406, 83.725899), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0},
-                ["YorukKure"]  = { pos = Vector(2551.250000, -6756.968750, -550.031250), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 },
-                ["KasabaKure"] = { pos = Vector(11523.310547, 2078.165771, -159.64688), radius = 2000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 },
-                ["ukraynaKoy"]     = { pos = Vector(-8289.852539, 10389.681641, -559.193359), radius = 1000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 }
+                ["TokiKure"]   = { pos = Vector(-200.405151, 3079.191406, 83.725899), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0},
+                ["YorukKure"]  = { pos = Vector(2551.250000, -6756.968750, -550.031250), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 },
+                ["KasabaKure"] = { pos = Vector(11523.310547, 2078.165771, -159.64688), radius = 2000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 },
+                ["ukraynaKoy"]     = { pos = Vector(-8289.852539, 10389.681641, -559.193359), radius = 1000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 }
             }
         },
         ["prm_hrabske"] = {
             Kureler = {
-                ["AmkKoy"] = { pos = Vector(-3807.058105, 1200.379883, 330.01007), radius = 550, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0}
+                ["AmkKoy"] = { pos = Vector(-3807.058105, 1200.379883, 330.01007), radius = 550, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0}
             }
         }
     }
@@ -151,7 +151,7 @@ else
             -- UKRAYNA ELE GEÇİRME/KONTROL MANTIĞI
             -- =========================================================
             if kure.ukraineCapPoint == 200 then
-                kure.flag = "gamemodes/globalwarfare3/materials/ukraineflag.png"
+                kure.flag = "gamemodes/globalwarfare3/content/materials/ukraineflag.png"
 
                 -- SADECE KONTROL İLK DEFA UKRAYNA'YA GEÇTİĞİNDE BONUS TICKET VER
                 if kure.controlledByTeam ~= UKR then
@@ -197,7 +197,7 @@ else
             -- RUSYA ELE GEÇİRME/KONTROL MANTIĞI
             -- =========================================================
             elseif kure.rusCapPoint == 200 then
-                kure.flag = "gamemodes/globalwarfare3/materials/russiaflag.png"
+                kure.flag = "gamemodes/globalwarfare3/content/materials/russiaflag.png"
 
                 -- SADECE KONTROL İLK DEFA RUSYA'YA GEÇTİĞİNDE BONUS TICKET VER
                 if kure.controlledByTeam ~= RUS then
@@ -236,7 +236,7 @@ else
                     end
                 end
             elseif kure.rusCapPoint == 0 and kure.ukraineCapPoint == 0 then
-                kure.flag = "gamemodes/globalwarfare3/materials/unknown.png"
+                kure.flag = "gamemodes/globalwarfare3/content/materials/unknown.png"
                 kure.ticketvermeSuresiUKR = 0
                 kure.ticketvermeSuresiRUS = 0
             end

@@ -195,41 +195,20 @@ function WinMenuStart(wincolor, winyazisi)
     local ukr = vgui.Create("DImage", menu)
     ukr:SetSize(imgW, imgH)
     ukr:SetPos(ukrX, imgY)
-    ukr:SetImage("gamemodes/globalwarfare3/materials/ukraine.png")
+    ukr:SetImage("gamemodes/globalwarfare3/content/materials/ukraine.png")
 
 
     -- RUSSIA RESİM
     local rus = vgui.Create("DImage", menu)
     rus:SetSize(imgW, imgH)
     rus:SetPos(rusX, imgY)
-    rus:SetImage("gamemodes/globalwarfare3/materials/russian.png")
+    rus:SetImage("gamemodes/globalwarfare3/content/materials/russian.png")
 
 end
-
--- F2 MENU AÇMA / KAPATMA
-hook.Add("Think", "WinnerMenuKeyOpenner", function()
-    if input.IsKeyDown(key) then
-        if not IsPressed and CurTime() > cooldown then
-
-            IsPressed = true
-            cooldown = CurTime() + cooldownTime
-
-            if not IsValid(menu) then
-                WinMenuStart(Color(20,20,30,220), "Ukrayna Kazandasdası")
-            else
-                menu:Close()
-                menu = nil
-            end
-        end
-    else
-        IsPressed = false
-    end
-end)
 
 hook.Add("Think", "partsCLIENT", function()
     if IsValid(menu) and CurTime() > cooldown2 then
         cooldown2 = CurTime() + cooldownTime2
-        print("sopar client")
         sopar = sopar - 1
     end
 end)

@@ -45,88 +45,104 @@ function GW3.logiPanelMenuBuild(parentPanel, entLocation, targetEntity, logiAmou
     A tall cornered sandbag barrier.
         ]],
         ["metalpanel"] = [[
-    Cost: 25 Resources
+    Cost: 25 Metal Panel
     Just a tall metal panel about 8.2mm thick.
         ]],
     ["metalpanelkucuk"] = [[
-    Cost: 15 Resources
+    Cost: 15 Metal Panel Small
     a metal panel about 8.2mm thick.
         ]],
     ["cabinet"] = [[
-    Cost: 15 Resources
+    Cost: 15 Cabinet
     A metal file cabinet.
         ]],
     ["cabinetbig"] = [[
-    Cost: 20 Resources
+    Cost: 20 Big Cabinet
     A large storage cabinet.
         ]],
     ["palet"] = [[
-    Cost: 20 Resources
+    Cost: 20 Pallet
     A wooden pallet.
         ]],
     ["crate"] = [[
-    Cost: 25 Resources
+    Cost: 25 Crate
     A wooden crate.
         ]],
     ["cratebig"] = [[
-    Cost: 25 Resources
+    Cost: 25 Big Crate
     A large wooden crate.
         ]],
     ["metaldesk"] = [[
-    Cost: 25 Resources
+    Cost: 25 Metal Desk
     A sturdy metal desk.
         ]],
     ["tirebig"] = [[
-    Cost: 25 Resources
+    Cost: 25 Big Tire
     A large vehicle tire.
         ]],
     ["tire"] = [[
-    Cost: 25 Resources
+    Cost: 25 Tire
     A standard rubber tire.
         ]],
     ["shelf"] = [[
-    Cost: 25 Resources
+    Cost: 25 Shelf
     A wooden book shelf.
         ]],
     ["table"] = [[
-    Cost: 25 Resources
+    Cost: 25 Table
     A small wooden table.
         ]],
     ["belediye"] = [[
-    Cost: 25 Resources
+    Cost: 25 Wooden Barricade
     A wood barricade, with red and white paint.
         ]],
     ["radyator"] = [[
-    Cost: 25 Resources
+    Cost: 25 Radiator
     A metal radiator, wont heat you.
         ]],
     ["dumpsterkapak"] = [[
-    Cost: 25 Resources
+    Cost: 25 Dumpster Lid
     A heavy dumpster lid.
         ]],
     ["breendesk"] = [[
-    Cost: 25 Resources
+    Cost: 25 City Hall Desk
     A administrative desk stolen from the city hall.
         ]],
     ["tablebig"] = [[
-    Cost: 25 Resources
+    Cost: 25 Big Table
     A cafeteria table, its wooden.
         ]],
     ["telkucuk"] = [[
-    Cost: 25 Resources
+    Cost: 25 Small fence
     A small wire fence.
         ]],
     ["telbuyuk"] = [[
-    Cost: 25 Resources
+    Cost: 25 Fence
     A wire fence
         ]],
     ["pushcart"] = [[
-    Cost: 25 Resources
+    Cost: 25 Push cart
     A wheeled cart.
     ]],
     ["woodfence"] = [[
-    Cost: 25 Resources
+    Cost: 25 Wooden fence
     A wooden fence.
+    ]],
+    ["toolbox"] = [[
+    Cost: 50 Toolbox
+    A toolbox you can use to make barricades.
+    ]],
+    ["basicparts"] = [[
+    Cost: 25 Basic parts
+    Some basic parts.
+    ]],
+    ["battery"] = [[
+    Cost: 25 Battery
+    Some basic parts.
+    ]],
+    ["gas"] = [[
+    Cost: 25 Gas Resource
+    A gas resource.
     ]]
     }
     -- changes the font by looking at the res v1
@@ -197,10 +213,7 @@ function GW3.logiPanelMenuBuild(parentPanel, entLocation, targetEntity, logiAmou
                 net.WriteEntity(targetEntity)
                 net.WriteInt(logisticAmount, 9)
             net.SendToServer()
-            print(logisticAmount)
-            print("çağırdım")
             if logiAmount <= 0 then
-                print("alo muhittin uzaylılar kacırdı diyorum")
             end
         end
         btn.Paint = function(self, w, h) PaintCustomButton(self, w, h, label) end
@@ -351,6 +364,14 @@ function GW3.logiPanelMenuBuild(parentPanel, entLocation, targetEntity, logiAmou
     AddLabel(ListExplosive, descTable["corner"], 50, 100, categoryWide,tall)
     AddLogiButton(ListExplosive, "Cornered Tall Sandbag Wall", "tallcorner")
     AddLabel(ListExplosive, descTable["tallcorner"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListExplosive, "Toolbox", "toolbox")
+    AddLabel(ListExplosive, descTable["toolbox"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListExplosive, "Basic Parts", "BasicParts")
+    AddLabel(ListExplosive, descTable["basicparts"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListExplosive, "Gas Resource", "gas")
+    AddLabel(ListExplosive, descTable["gas"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListExplosive, "Battery", "battery")
+    AddLabel(ListExplosive, descTable["battery"], 50, 100, categoryWide,tall)
 
     local Seperator1 = vgui.Create( "DPanel", panel )
     Seperator1:SetPos(wide * 0.413 + categoryWide, tall * 0.02) -- Set the position of the panel

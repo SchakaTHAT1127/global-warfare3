@@ -41,11 +41,9 @@ local function convarModDegisici()
         sv_conquest:SetInt(0)
         sv_resourcecontrol:SetInt(0)
     else
-        print("ERROR CONVAR MOD DEGİSİCİ")
         sv_conquest:SetInt(1)
         sv_resourcecontrol:SetInt(0)
         sv_teamelimination:SetInt(0)
     end
-    print("convarModDegisici")
 end
 convarModDegisici()

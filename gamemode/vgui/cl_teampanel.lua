@@ -110,11 +110,11 @@ function GW3.teamPanelMenu(parentPanel)
     vigmid:SetPos(ScrW()/2.25,ScrH()-ScrH())
     vigmid:SetSize(ScrW()/10, ScrH()) 
 
-    rus:SetImage("gamemodes/globalwarfare3/materials/russian.png")
-    ukr:SetImage("gamemodes/globalwarfare3/materials/ukraine.png")
+    rus:SetImage("gamemodes/globalwarfare3/content/materials/russian.png")
+    ukr:SetImage("gamemodes/globalwarfare3/content/materials/ukraine.png")
 
-    vignet:SetImage("gamemodes/globalwarfare3/materials/vignet.png")
-    vigmid:SetImage("gamemodes/globalwarfare3/materials/lalali.png")
+    vignet:SetImage("gamemodes/globalwarfare3/content/materials/vignet.png")
+    vigmid:SetImage("gamemodes/globalwarfare3/content/materials/lalali.png")
 
     return panel
 end

@@ -1,6 +1,4 @@
 DeriveGamemode("sandbox")
-print("shared.lua yüklendi")
-
 GM.Name = "Global Warfare 3"
 GM.Author = "Alp Er Tunga"
 

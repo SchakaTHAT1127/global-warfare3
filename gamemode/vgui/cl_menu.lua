@@ -9,11 +9,17 @@ local ply = LocalPlayer()
 
 function menuStart()
     menu = vgui.Create("DFrame")
-    menu:SetPos(100, 100)
+    menu:SetPos(0, 0)
     menu:SetSize(ScrW(), ScrH())
     menu:SetTitle("")
-    menu:Center()
+    menu:ShowCloseButton(false)
+    menu:SetDraggable(false)
+    menu:SetSizable(false)
     menu:MakePopup()
+    GW3.BriefingMenu = menu
+    menu.OnClose = function()
+        if GW3.BriefingMenu == menu then GW3.BriefingMenu = nil end
+    end
     menu:SetAlpha(0)
     menu:AlphaTo(255, 0.8, 0.2)
     -- FRAME
@@ -60,6 +66,9 @@ function menuStart()
         surface.DrawRect(0, 0, w, h)    
     end
     mSheet:AddSheet("   Mission Briefing   ", briefPanel, "icon16/report.png")
+    if GW3.CreateBriefingMapPanel then
+        GW3.CreateBriefingMapPanel(briefPanel)
+    end
 
     local teamPanel = vgui.Create("DPanel", mSheet)
     teamPanel.Paint = function(self, w, h)
@@ -169,15 +178,6 @@ net.Receive("GW3_TeamSelectionResult", function()
         end
         GW3.ForcedTeamFrame = nil
     end
-
-    if message ~= "" then
-        chat.AddText(
-            success and Color(100, 220, 120) or Color(255, 90, 90),
-            "[GW3] ",
-            Color(235, 235, 235),
-            message
-        )
-    end
 end)
 
 --openning system of the menu, grabbed right from 2.3 
@@ -197,5 +197,12 @@ hook.Add("Think", "MenuKeyOpenner", function()
         end
     else
         IsPressed = false
+    end
+end)
+
+hook.Add("OnScreenSizeChanged", "GW3_ResizeBriefingMenu", function()
+    if IsValid(menu) then
+        menu:SetPos(0, 0)
+        menu:SetSize(ScrW(), ScrH())
     end
 end)

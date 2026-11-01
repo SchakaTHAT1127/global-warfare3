@@ -232,12 +232,6 @@ function ENT:SetbuildLogisticAmount(amount)
         math.Round(self.crateLogisticBuild)
     )
 
-    print(
-        self:GetClass()
-        .. " yeni lojistik amountı: "
-        .. self.crateLogisticBuild
-    )
-
     if self.crateLogisticBuild <= 0 then
         self.GW3BuildCrateDepleted = true
         self:Remove()

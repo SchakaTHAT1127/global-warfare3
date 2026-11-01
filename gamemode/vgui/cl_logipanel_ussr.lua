@@ -199,7 +199,6 @@ function GW3.logiPanelMenuRus(parentPanel, entLocation, targetEntity, logiAmount
                 net.WriteInt(logisticAmountRus, 9)
             net.SendToServer()
             print(logisticAmountRus)
-            print("çağırdım")
             if logiAmount <= 0 then
             end
         end

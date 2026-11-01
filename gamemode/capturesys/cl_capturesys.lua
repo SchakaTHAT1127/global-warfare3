@@ -1,8 +1,7 @@
 local teamElimineMod = GetConVar("sv_teamelimination")
 if teamElimineMod and teamElimineMod:GetInt() == 1 then 
-    print("team elimine aktif!")
+
 else
-    print("notteamelimne")
     KureMaterial = CreateMaterial("CustomWireframeMat", "UnlitGeneric", {
         ["$basetexture"] = "vgui/white",
         ["$wireframe"]   = 1, 
@@ -13,15 +12,15 @@ else
     ModeKurelerTablesi = {
         ["wid_peremen"] = {
             Kureler = {
-                ["TokiKure"]   = { pos = Vector(-200.405151, 3079.191406, 83.725899), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0},
-                ["YorukKure"]  = { pos = Vector(2551.250000, -6756.968750, -550.031250), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0 },
-                ["KasabaKure"] = { pos = Vector(11523.310547, 2078.165771, -159.64688), radius = 2000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0 },
-                ["ukraynaKoy"] = { pos = Vector(-8289.852539, 10389.681641, -559.193359), radius = 1000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 }
+                ["TokiKure"]   = { pos = Vector(-200.405151, 3079.191406, 83.725899), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0},
+                ["YorukKure"]  = { pos = Vector(2551.250000, -6756.968750, -550.031250), radius = 1200, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0 },
+                ["KasabaKure"] = { pos = Vector(11523.310547, 2078.165771, -159.64688), radius = 2000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0 },
+                ["ukraynaKoy"] = { pos = Vector(-8289.852539, 10389.681641, -559.193359), radius = 1000, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0, ticketverenUKR = 0, ticketvermeSuresiUKR = 0, ticketverenRUS = 0, ticketvermeSuresiRUS = 0 }
             }
         },
         ["prm_hrabske"] = {
             Kureler = {
-                ["AmkKoy"] = { pos = Vector(-3807.058105, 1200.379883, 330.01007), radius = 550, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0}
+                ["AmkKoy"] = { pos = Vector(-3807.058105, 1200.379883, 330.01007), radius = 550, color = Color(255, 255, 255), controlledByTeam = 1001, ukraineCapPoint = 0, rusCapPoint = 0, flag = "gamemodes/globalwarfare3/content/materials/unknown.png", kureOyuncuSayisiUKR = 0, kureOyuncuSayisiRUS = 0}
             }
         }
     }
@@ -180,16 +179,6 @@ else
         end
     end
 
-    hook.Add("PostDrawTranslucentRenderables", "VisualizeAllSpheres", function(depth, skybox)
-        if depth or skybox or not KureMaterial or not next(aktifKureler) then return end
-
-        render.SetMaterial(KureMaterial)
-        for _, kure in pairs(aktifKureler) do
-            render.DrawSphere(kure.pos, -kure.radius, 6, 6, kure.color)
-            render.DrawSphere(kure.pos, kure.radius, 6, 6, kure.color)
-        end
-    end)
-
     local function dasakx()
         local nextCheck = 0
         hook.Add("Think", "ConquestModeThink", function()
@@ -223,7 +212,6 @@ else
                             net.WriteInt(plyTeam, 16)
                         net.SendToServer()
                         KureninIcinde = true
-                        print("tasaskaakssakaksaks")
                     end
                     break
                 end
@@ -237,7 +225,6 @@ else
                     net.WriteInt(plyTeam, 16)
                 net.SendToServer()
                 flagframeClose()
-                print("if not herhangiBirKuredemi and KureninIcinde then")
             end
         end)
     end

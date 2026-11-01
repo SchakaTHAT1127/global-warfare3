@@ -1,5 +1,6 @@
 -- Client kodlarını ekliyoruz
 include("shared.lua")
+include("vgui/cl_briefingmap.lua")
 include("vgui/cl_menu.lua")
 include("vgui/cl_teampanel.lua")
 include("vgui/cl_winnermenu.lua")
@@ -9,7 +10,6 @@ include("logihandler/cl_logihandler.lua")
 include("cratehints/cl_cratehints.lua")
 include("capturesys/cl_capturesys.lua")
 include("player/cl_playercustomization.lua")
-
 -- Fontlar.
 surface.CreateFont( "LabelHud1S", {
 	font = "Arial",
@@ -183,7 +183,7 @@ local barrierColors = {
 
 net.Receive("GW3_TeamBarrierSync", function()
 
-    for teamID = 1, 2 do
+    for _, teamID in ipairs({ UKR, RUS }) do
         barriers[teamID] = {
             active = net.ReadBool(),
             pos = net.ReadVector(),
@@ -219,13 +219,15 @@ hook.Add("PostDrawTranslucentRenderables", "GW3_DrawTeamBarriers", function(dept
 end)
 
 local baskatable = {
-    [2] = {
-        pos = Vector(-13667.385742, -1544.606445, -762.212280),
+    -- Team 1 = Ukraine, Team 2 = Russia. Keep these centers identical
+    -- to the server-side TeamBarriers table so the circles never swap sides.
+    [UKR] = {
+        -- Match the center of the actual Ukrainian player-spawn cluster.
+        pos = Vector(13487.118765, -12187.677358, -70.968750),
         radius = 5000
     },
-
-    [1] = {
-        pos = Vector(12199.857422, -12617.125000, -47.968742),
+    [RUS] = {
+        pos = Vector(-13667.385742, -1544.606445, -762.212280),
         radius = 5000
     }
 }
@@ -234,8 +236,8 @@ local glowingPlayers = {}
 local nextHaloRefresh = 0
 local haloRefreshInterval = 0.2
 local enemyHaloColor = Color(255, 0, 0)
-local zoneOneRadiusSqr = baskatable[1].radius * baskatable[1].radius
-local zoneTwoRadiusSqr = baskatable[2].radius * baskatable[2].radius
+local zoneOneRadiusSqr = baskatable[UKR].radius * baskatable[UKR].radius
+local zoneTwoRadiusSqr = baskatable[RUS].radius * baskatable[RUS].radius
 
 -- Rakip spawnına girmiş oyuncu hem halo listesine eklenir hem de
 -- kendi ekranında uyarı görür.
@@ -248,9 +250,9 @@ local function IsPlayerInEnemySpawn(ply)
     local plyPos = ply:GetPos()
 
     if teamID == 2 then
-        return plyPos:DistToSqr(baskatable[1].pos) <= zoneOneRadiusSqr
+        return plyPos:DistToSqr(baskatable[UKR].pos) <= zoneOneRadiusSqr
     elseif teamID == 1 then
-        return plyPos:DistToSqr(baskatable[2].pos) <= zoneTwoRadiusSqr
+        return plyPos:DistToSqr(baskatable[RUS].pos) <= zoneTwoRadiusSqr
     end
 
     return false
@@ -282,7 +284,7 @@ hook.Add("HUDPaint", "GW3_EnemySpawnGlowWarning", function()
 
     local centerX = ScrW() / 2
     draw.SimpleTextOutlined(
-        "PARLIYORSUN!",
+        "YOU ARE SHINING!",
         "Trebuchet24",
         centerX,
         105,
@@ -294,8 +296,8 @@ hook.Add("HUDPaint", "GW3_EnemySpawnGlowWarning", function()
     )
 
     draw.SimpleTextOutlined(
-        "Düşman spawn bölgesinde tespit ediliyorsun.",
-        "Trebuchet18",
+        "The enemy can see you, Leave the enemys spawn area!",
+        "Trebuchet20",
         centerX,
         132,
         Color(255, 255, 255),
@@ -304,4 +306,45 @@ hook.Add("HUDPaint", "GW3_EnemySpawnGlowWarning", function()
         1,
         Color(0, 0, 0, 230)
     )
+end)
+
+if CLIENT then
+
+    local function IsAllowedToOpenMenus()
+        local ply = LocalPlayer()
+        return IsValid(ply) and ply:IsSuperAdmin()
+    end
+
+    -- Q menüsü
+    hook.Add("SpawnMenuOpen", "GW3_AdminOnlySpawnMenu", function()
+        if not IsAllowedToOpenMenus() then
+            return false
+        end
+    end)
+
+    -- C menüsü
+    hook.Add("ContextMenuOpen", "GW3_AdminOnlyContextMenu", function()
+        if not IsAllowedToOpenMenus() then
+            return false
+        end
+    end)
+
+    -- Q ve C tuşlarını da engelle
+    hook.Add("PlayerBindPress", "GW3_AdminOnlyMenuKeys", function(ply, bind)
+        if not IsValid(ply) or ply:IsSuperAdmin() then return end
+
+        bind = string.lower(bind)
+
+        if bind == "+menu" or bind == "+menu_context" then
+            return true
+        end
+    end)
+end
+
+hook.Add("PlayerButtonDown", "F2ClientCommand", function(ply, button)
+    if ply ~= LocalPlayer() then return end
+
+    if button == KEY_F2 then
+        RunConsoleCommand("rapd_show_info")
+    end
 end)

@@ -6,8 +6,6 @@ end
 
 function progressFunc(targetEnt)
     if not IsValid(targetEnt) then return end -- Güvenlik kontrolü
-
-    print("PF " .. tostring(targetEnt))
     local duration = 8
     local startTime = CurTime()
     local finishTime = startTime + duration
@@ -80,7 +78,6 @@ function progressFunc(targetEnt)
 end
 
 function progressDone(targetEnt)
-    print("PD " .. tostring(targetEnt))
     net.Start("progressDone")
         net.WriteEntity(targetEnt)
     net.SendToServer()
@@ -88,8 +85,6 @@ end
 
 -- this code makes you see the information in person
 net.Receive("alertClientAboutUse", function()
-    print("i receiv")
     local targetEnt = net.ReadEntity()
-    print(targetEnt)
     progressFunc(targetEnt)
 end)

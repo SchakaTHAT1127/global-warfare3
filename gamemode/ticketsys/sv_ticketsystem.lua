@@ -16,9 +16,6 @@ local function HandleVehicleLoss(ent, list, teamID, teamVarName)
             local newTickets = math.max(0, currentTickets - (tonumber(data.ticket) or 0))
             _G[teamVarName] = newTickets
             team.SetScore(teamID, newTickets)
-
-            print("[SISTEM] Arac imha edildi: " .. tostring(name))
-            print("[SISTEM] Kalan bilet: " .. newTickets)
             hook.Run("AracPatladi", data.class, teamID)
             return
         end
@@ -67,7 +64,6 @@ local function HandlePlayerDeath(ply)
     _G[teamVarName] = newTickets
     team.SetScore(teamID, newTickets)
 
-    print("[SISTEM] Oyuncu oldu. Kalan bilet: " .. newTickets)
 end
 
 hook.Add("PlayerDeath", "GW3_PlayerDeathTicketCost", function(victim)
@@ -77,7 +73,6 @@ end)
 util.AddNetworkString("GW3_WinMenuStart")
 
 local function getwinneri1()
-    print("Ukrayna kazandı")
 
     net.Start("GW3_WinMenuStart")
         net.WriteColor(Color(20,20,30,220))
@@ -87,7 +82,6 @@ local function getwinneri1()
 end
 
 local function getwinneri2()
-    print("Rusya kazandı")
 
     net.Start("GW3_WinMenuStart")
         net.WriteColor(Color(30,20,20,220))
@@ -113,8 +107,6 @@ hook.Add("Think", "OyunBittiMi", function()
         if team.GetScore(i) <= 0 then
             fonksiyonCalistir[i]()
 
-            print(i .. " takımı 0 veya daha az ticket!")
-
             MacBitti = true
             break
         end
@@ -124,10 +116,8 @@ end)
 hook.Add("Think", "partsSERVER", function() 
     if MacBitti and CurTime() > cooldown2 and sopar > 0 then
         cooldown2 = CurTime() + cooldownTime2
-        print("sopar server")
         sopar = sopar - 1
     elseif sopar <= 0 then
-        print("sopar server ELSEIF HALİ")
         RunConsoleCommand("changelevel", game.GetMap())
     end
 end)

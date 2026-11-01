@@ -1,6 +1,7 @@
 -- bütün cl ve sv dosyalarını ekliyoruz
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("vgui/cl_menu.lua")
+AddCSLuaFile("vgui/cl_briefingmap.lua")
 AddCSLuaFile("vgui/cl_winnermenu.lua")
 AddCSLuaFile("vgui/cl_teampanel.lua")
 AddCSLuaFile("vgui/cl_tabmenu.lua")
@@ -15,10 +16,12 @@ include("logispawner/sv_logispawner_ussr.lua")
 include("logispawner/sv_logispawner.lua")
 include("logihandler/sv_logihandler.lua")
 include("shared.lua") 
+include("map/sv_mapbriefing.lua")
 include("player/sv_playercustomization.lua")
 include("vgui/sv_menu.lua")
 include("cvars.lua")
 include("capturesys/sv_capturesys.lua")
+include("jmodcompat/sv_jmodcompat.lua")
 
 include("vehiclespawn/sv_ukraine_arac_spawn.lua")
 include("vehiclespawn/sv_russia_arac_spawn.lua")
@@ -84,7 +87,6 @@ hook.Add("CanPlayerSuicide", "stopSuicide", function(ply)
 end)
 
 hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikten sonra ticketleri tekrar setliyoruz, ve her takıma score olarak ticketleri koyuyoruz. 
-    print("InitPostEntity")
     UKRticket = cv_ticketUkr:GetInt()
     RUSticket = cv_ticketRus:GetInt()
     team.SetScore(1, UKRticket)
@@ -92,19 +94,20 @@ hook.Add( "InitPostEntity", "SunucuHazirKodu", function() --Her şey yüklendikt
 end)
 
 local function spawnetarmorlari()
-    print("geldi")
     if cv_giveArmorFirstSpawn:GetInt() == 1 then
         for i=1, 4 do
             if i<3 then
                 local crate = ents.Create("ent_armorcrate")
                 crate:SetPos(tablokordinat[i])
                 crate:SetAngles(Angle(0, 90, 0))
+                crate:SetNW2Int("GW3Team", UKR)
                 crate:Spawn()
                 crate:Activate()
             elseif i>=3 then
                 local crate = ents.Create("ent_armorcrate_ussr")
                 crate:SetPos(tablokordinat[i])
                 crate:SetAngles(Angle(0, 180, 0))
+                crate:SetNW2Int("GW3Team", RUS)
                 crate:Spawn()
                 crate:Activate()
             end
@@ -114,7 +117,6 @@ end
 
 hook.Add( "Initialize", "iniilazir", function()
     timer.Simple(3, function()
-        print("İNİTİALİZE all")
         SpawnVehicleUkraynaInitial()
         SpawnVehicleRusyaInitial()
         SpawnVehicleLogiInitial()
@@ -283,14 +285,6 @@ local function GW3FindSpawnPosition(ply, teamID)
                 end
             end
         else
-            print(
-                "[GW3 Spawn] Geçersiz koordinat! Takım: "
-                .. teamID
-                .. " | Nokta: "
-                .. index
-                .. " | "
-                .. tostring(originalPos)
-            )
         end
     end
 
@@ -345,21 +339,9 @@ hook.Add("PlayerSpawn", "GW3_TeamBasedPlayerSpawn", function(ply)
         if GW3SpawnReservations[teamID][spawnIndex] == ply then
             GW3SpawnReservations[teamID][spawnIndex] = nil
         end
-
-        print(
-            "[GW3 Spawn] "
-            .. ply:Nick()
-            .. " | Takım: "
-            .. teamID
-            .. " | Nokta: "
-            .. spawnIndex
-            .. " | Konum: "
-            .. tostring(spawnPos)
-        )
     end)
 end)
 
-print("[GW3 Spawn] Takım bazlı spawn sistemi yüklendi.")
 
 UKRticket = cv_ticketUkr:GetInt()
 RUSticket = cv_ticketRus:GetInt()
@@ -370,14 +352,17 @@ util.AddNetworkString("GW3_TeamBarrierSync")
 
 -- KÜRE AYARLARI
 local TeamBarriers = {
-    [2] = {
-        pos = Vector(-13667.385742, -1544.606445, -762.212280),
-        radius = 1700
+    -- Team 1 is UKRAINE (blue): eastern / positive-X base.
+    [UKR] = {
+        -- Center of the actual Ukrainian player-spawn cluster in GW3PlayerSpawnPositions.
+        pos = Vector(13487.118765, -12187.677358, -70.968750),
+        radius = 5000
     },
 
-    [1] = {
-        pos = Vector(12199.857422 ,-12617.125000 ,-47.968742),
-        radius = 1700
+    -- Team 2 is RUSSIA (red): western / negative-X base.
+    [RUS] = {
+        pos = Vector(-13667.385742, -1544.606445, -762.212280),
+        radius = 5000
     }
 }
 
@@ -398,7 +383,7 @@ local participants = {
 local function SyncBarriers(target)
     net.Start("GW3_TeamBarrierSync")
 
-    for teamID = 1, 2 do
+    for _, teamID in ipairs({ UKR, RUS }) do
         local data = TeamBarriers[teamID]
 
         net.WriteBool(CurTime() < barrierEnd[teamID])
@@ -436,8 +421,9 @@ function GW3.StartTeamBarriers()
     participants[1] = {}
     participants[2] = {}
 
-    barrierEnd[1] = CurTime() + 90
-    barrierEnd[2] = CurTime() + 90
+    -- The starting barrier lasts 10 seconds, as requested.
+    barrierEnd[UKR] = CurTime() + 10
+    barrierEnd[RUS] = CurTime() + 10
 
     for _, ply in ipairs(player.GetAll()) do
         RegisterBarrierParticipant(ply)
@@ -515,7 +501,6 @@ local teamVehicleList = {
         ["lvs_trailer_zis3"] = true,
         ["lvs_trailer_dshk_12mm"] = true,
         ["sw_kord"] = true,
-        ["2vt40"] = true
     },
 
     [2] = {
@@ -525,7 +510,6 @@ local teamVehicleList = {
         ["lvs_trailer_zis3"] = true,
         ["lvs_trailer_dshk_12mm"] = true,
         ["sw_kord"] = true,
-        ["2vt40"] = true
     }
 }
 
@@ -617,3 +601,22 @@ hook.Add("PlayerLoadout", "GW3_CustomSpawnLoadout", function(ply)
         end
     end)
 end)
+
+
+if SERVER then
+    hook.Add("PlayerShouldTakeDamage", "GW3_NoTeamKill", function(victim, attacker)
+
+        if not IsValid(attacker) or not attacker:IsPlayer() then
+            return
+        end
+
+        -- Kendine verdiği hasarı engelleme
+        if victim == attacker then return end
+
+        -- Aynı takım hasarını engelle
+        if victim:Team() == attacker:Team() then
+            return false
+        end
+
+    end)
+end

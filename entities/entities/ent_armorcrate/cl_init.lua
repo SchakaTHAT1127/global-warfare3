@@ -75,7 +75,6 @@ end)
 net.Receive("armorUKRVector", function( len )
     -- receving the vector
     logiLocation = net.ReadVector()
-    print(logiLocation)
 end)
 -- worst name ever
 net.Receive("logisticSendNewAmountArmorUKR", function()

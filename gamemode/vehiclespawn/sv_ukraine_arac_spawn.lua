@@ -49,12 +49,12 @@ function SpawnVehicleUkraynaInitial()
             -- Aracı oluşturma
             local vehicleUkr = ents.Create(data.class)
             if IsValid(vehicleUkr) then
+                vehicleUkr:SetNW2Int("GW3Team", 1)
                 vehicleUkr:SetPos(GeciciPosUkr)
                 vehicleUkr:SetAngles(AracCord.ang)
                 vehicleUkr:Spawn()
                 vehicleUkr:Activate()
                 
-                print(name .. " başarıyla doğuruldu. Pozisyon: " .. tostring(GeciciPosUkr))
             end
 
             aktifOffset = aktifOffset + 300
@@ -64,7 +64,6 @@ end
 
 local function SpawnVehicleUkrayna(entityClass)
     if not AracCord or not entityClass then 
-        print("HATA VAR")
     return end
 
     local GeciciPosUkr = Vector(AracCord.pos.x, AracCord.pos.y, AracCord.pos.z)
@@ -76,7 +75,8 @@ local function SpawnVehicleUkrayna(entityClass)
 
     local vehicleUkr = ents.Create(entityClass)
     if IsValid(vehicleUkr) then
-        vehicleUkr:SetPos(GeciciPosUkr)
+        vehicleUkr:SetNW2Int("GW3Team", 1)
+                vehicleUkr:SetPos(GeciciPosUkr)
         vehicleUkr:SetAngles(AracCord.ang)
         vehicleUkr:Spawn()
         vehicleUkr:Activate()
@@ -101,9 +101,7 @@ end)
 
 local function YazdiriciTester()
     for name, _ in pairs(entAraclarUkrayna) do
-        print("\n"..name)
         for k, v in pairs(entAraclarUkrayna[name]) do
-            print(k, v)   
         end
     end
 end

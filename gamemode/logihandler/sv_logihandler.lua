@@ -55,7 +55,6 @@ net.Receive("logisticSendNewAmountArmorRUS", function(len, ply)
     local team = ply:Team()
 
     -- calling the func
-    print("called func")
     GW3.entCall(wpn, team, ply, sentPos, readedLogistic, targetEnt)
 end)
 net.Receive("logisticSendNewAmountBuild", function(len, ply)
@@ -79,7 +78,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         ["antitank"]   = { [1] = { class = "tacrp_rpg7", price = 65 }, [2] = { class = "tacrp_rpg7", price = 65 } },
         ["special"]   = { [1] = { class = "tacrp_ex_ak47", price = 20 }, [2] = { class = "tacrp_io_val", price = 30 } },
         ["carbine"]   = { [1] = { class = "tacrp_ak_ak74u", price = 15 }, [2] = { class = "tacrp_ak_ak74u", price = 15 } },
-        ["artillery1"] = { [1] = { class = "sw_kord", price = 120 }, [2] = { class = "sw_kord", price = 120 } },
+        ["artillery1"] = { [1] = { class = "sw_kord", price = 120 }, [2] = { class = "lvs_trailer_dshk_12mm", price = 120 } },
         ["misc"]       = { [1] = { class = "lvs_trailer_zis3", price = 170 }, [2] = { class = "lvs_trailer_zis3", price = 170 } },
         ["radio"]      = { [1] = { class = "ent_radcrate", price = 15 }, [2] = { class = "ent_radcrate", price = 15 } },
 
@@ -169,8 +168,13 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         },
 
         ["30002"] = {
-            [1] = { class = "ent_jack_gmod_ezarmor_nvgs", price = 80 },
+            [1] = { class = "ent_jack_gmod_ezarmor_temp3000cover", price = 20 },
             [2] = { class = "ent_jack_gmod_ezarmor_nvgs", price = 80 }
+        },
+
+        ["korsar"] = {
+            [1] = { class = "ent_jack_gmod_ezarmor_korsar", price = 25 },
+            [2] = { class = "ent_jack_gmod_ezarmor_korsar", price = 25 }
         },
 
         ["ammo"]       = { [1] = { class = "ent_jack_gmod_ezammo", price = 60 }, [2] = { class = "ent_jack_gmod_ezammo", price = 60 } },
@@ -190,7 +194,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         ["tnt"]        = { [1] = { class = "ent_jack_gmod_eztnt", price = 80 }, [2] = { class = "ent_jack_gmod_eztnt", price = 80 } },
 
         ["kutumermi"]         = { [1] = { class = "lvs_item_ammocrate", price = 80 }, [2] = { class = "lvs_item_ammocrate", price = 80 } },
-        ["kutuarmor"]        = { [1] = { class = "ent_jack_gmod_eztnt", price = 100 }, [2] = { class = "ent_jack_gmod_eztnt", price = 100 } },
+        ["kutuarmor"]        = { [1] = { class = "ent_armorcrate", price = 80 }, [2] = { class = "ent_armorcrate_ussr", price = 80 } },
 
         ["dragonsteeth"]    = { [1] = { class = "ent_dragonstone", price = 30 }, [2] = { class = "ent_dragonstone", price = 30 } },
         ["hedgehog"]         = { [1] = { class = "ent_czechmetalthing", price = 30 }, [2] = { class = "ent_czechmetalthing", price = 30 } },
@@ -198,6 +202,11 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
         ["tallwall"]    = { [1] = { class = "ent_sandbagwidbig", price = 40 }, [2] = { class = "ent_sandbagwidbig", price = 40 } },
         ["corner"]         = { [1] = { class = "ent_sandbagwidcorner", price = 20 }, [2] = { class = "ent_sandbagwidcorner", price = 30 } },
         ["tallcorner"]        = { [1] = { class = "ent_sandbagwidcornerbig", price = 40 }, [2] = { class = "ent_sandbagwidcornerbig", price = 40 } },
+
+        ["toolbox"]        = { [1] = { class = "ent_jack_gmod_eztoolbox", price = 50 }, [2] = { class = "ent_jack_gmod_eztoolbox", price = 50 } },
+        ["basicparts"]    = { [1] = { class = "ent_jack_gmod_ezbasicparts", price = 25 }, [2] = { class = "ent_jack_gmod_ezbasicparts", price = 25 } },
+        ["battery"]         = { [1] = { class = "ent_jack_gmod_ezbattery", price = 25 }, [2] = { class = "ent_jack_gmod_ezbattery", price = 25 } },
+        ["gas"]        = { [1] = { class = "ent_jack_gmod_ezgas", price = 25 }, [2] = { class = "ent_jack_gmod_ezgas", price = 25 } },
        
         ["metalpanel"] = {
             [1] = { class = "prop_physics", model = "models/props_debris/metal_panel01a.mdl", price = 15 },
@@ -296,9 +305,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
             if logistic >= price then  --lojistik yetiyosa
                 logistic = logistic - price -- azaltma yapıyoz
                 targetedentity:SetLogisticAmountUkr(logistic) --yeni lojistik miktarını atama yapıyoz
-                
-                print("succesful new logistic: " .. logistic)
-                print("team1")
 
                 local weapon = ents.Create(itemData.class) --sonra spawn ediyoz işte
                 if IsValid(weapon) then
@@ -307,7 +313,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     weapon:Activate()
 
                     local class = weapon:GetClass()
-                    print("ukr")
                     
                     -- Eşya tipine göre kaynak belirleme
                     if class == "ent_jack_gmod_ezammo" then
@@ -319,7 +324,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                 end
             else
                 -- Lojistik yetersizse burası çalışır
-                print("Lojistik yetersiz")
             end
         end
     elseif team == 2 and targetedentity:GetClass() == "ent_logicrate_ussr" then
@@ -327,9 +331,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
             if logistic >= price then  --lojistik yetiyosa
                 logistic = logistic - price -- azaltma yapıyoz
                 targetedentity:SetLogisticAmountRus(logistic) --yeni lojistik miktarını atama yapıyoz
-                
-                print("succesful new logistic: " .. logistic)
-                print("team2")
                 local weapon = ents.Create(itemData.class) --sonra spawn ediyoz işte
                 if IsValid(weapon) then
                     weapon:SetPos(sentPos + Vector(0,0,60))
@@ -337,7 +338,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     weapon:Activate()
 
                     local class = weapon:GetClass()
-                    print("rus")
                     
                     -- Eşya tipine göre kaynak belirleme
                     if class == "ent_jack_gmod_ezammo" then
@@ -359,9 +359,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
             if logistic >= price then  --lojistik yetiyosa
                 logistic = logistic - price -- azaltma yapıyoz
                 targetedentity:SetarmorUKRLogisticAmount(logistic) --yeni lojistik miktarını atama yapıyoz
-                
-                print("succesful new logistic: " .. logistic)
-                print("team1")
+            
 
                 local weapon = ents.Create(itemData.class) --sonra spawn ediyoz işte
                 if IsValid(weapon) then
@@ -370,7 +368,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     weapon:Activate()
 
                     local class = weapon:GetClass()
-                    print("ukr")
                     
                     -- Eşya tipine göre kaynak belirleme
                     if class == "ent_jack_gmod_ezammo" then
@@ -381,7 +378,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     return end
                 end
             else
-                -- Lojistik yetersizse burası çalışır
                 print("Lojistik yetersiz")
             end
         end
@@ -390,9 +386,7 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
             if logistic >= price then  --lojistik yetiyosa
                 logistic = logistic - price -- azaltma yapıyoz
                 targetedentity:SetarmorRUSLogisticAmount(logistic) --yeni lojistik miktarını atama yapıyoz
-                
-                print("succesful new logistic: " .. logistic)
-                print("team1")
+            
 
                 local weapon = ents.Create(itemData.class) --sonra spawn ediyoz işte
                 if IsValid(weapon) then
@@ -401,8 +395,6 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                     weapon:Activate()
 
                     local class = weapon:GetClass()
-                    print("rus")
-                    
                     -- Eşya tipine göre kaynak belirleme
                     if class == "ent_jack_gmod_ezammo" then
                         weapon:SetResource(35) 
@@ -422,20 +414,15 @@ function GW3.entCall(wpn, team, ply, sentPos, logistic, targetedentity)
                 logistic = logistic - price -- azaltma yapıyoz
                 targetedentity:SetbuildLogisticAmount(logistic) --yeni lojistik miktarını atama yapıyoz
                 
-                print("succesful new logistic: " .. logistic)
-                print("bos")
-
                 local weapon = ents.Create(itemData.class) --sonra spawn ediyoz işte
                 if IsValid(weapon) then
                     local class = weapon:GetClass()
-                    print("none")
                     -- Eşya tipine göre kaynak belirleme
                     if class == "ent_jack_gmod_ezammo" then
                         weapon:SetResource(35) 
                     elseif class == "ent_jack_gmod_ezmunitions" then
                         weapon:SetResource(32)
                     elseif class == "prop_physics" then
-                        print(itemData.model)
                         weapon:SetModel(itemData.model)
                     end
                     weapon:SetPos(sentPos + Vector(0,0,60))

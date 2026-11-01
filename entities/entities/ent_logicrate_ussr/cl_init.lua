@@ -77,7 +77,6 @@ end)
 net.Receive("crateVector_rus", function( len )
     -- receving the vector
     logiLocation_rus = net.ReadVector()
-    print(logiLocation_rus)
 end)
 
 -- worst name ever

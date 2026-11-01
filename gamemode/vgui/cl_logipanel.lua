@@ -198,9 +198,7 @@ function GW3.logiPanelMenu(parentPanel, entLocation, targetEntity, logiAmount)
                 net.WriteInt(logisticAmount, 9)
             net.SendToServer()
             print(logisticAmount)
-            print("çağırdım")
             if logiAmount <= 0 then
-                print("alo muhittin uzaylılar kacırdı diyorum")
             end
         end
         btn.Paint = function(self, w, h) PaintCustomButton(self, w, h, label) end

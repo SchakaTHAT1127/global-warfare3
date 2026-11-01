@@ -106,7 +106,6 @@ net.Receive("SendTeam", function(_, ply)
         message = team.GetName(finalTeam) .. " takımına katıldın."
     end
 
-    ply:ChatPrint(message)
     SendTeamSelectionResult(ply, true, message)
 
     -- İlk seçim tamamlandı; zorunlu seçim ekranını tekrar gönderme döngüsünü durdur.

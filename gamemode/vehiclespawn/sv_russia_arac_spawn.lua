@@ -48,12 +48,12 @@ function SpawnVehicleRusyaInitial()
             -- Aracı oluşturma
             local vehicleRus = ents.Create(data.class)
             if IsValid(vehicleRus) then
+                vehicleRus:SetNW2Int("GW3Team", 2)
                 vehicleRus:SetPos(GeciciPosRus)
                 vehicleRus:SetAngles(AracCord.ang)
                 vehicleRus:Spawn()
                 vehicleRus:Activate()
                 
-                print(name .. " başarıyla doğuruldu. Pozisyon: " .. tostring(GeciciPosRus))
             end
 
             aktifOffset = aktifOffset + 300
@@ -73,7 +73,8 @@ local function SpawnVehicleRusya(entityClass)
 
     local vehicleRus = ents.Create(entityClass)
     if IsValid(vehicleRus) then
-        vehicleRus:SetPos(GeciciPosRus)
+        vehicleRus:SetNW2Int("GW3Team", 2)
+                vehicleRus:SetPos(GeciciPosRus)
         vehicleRus:SetAngles(AracCord.ang)
         vehicleRus:Spawn()
         vehicleRus:Activate()
@@ -98,9 +99,7 @@ end)
 
 local function YazdiriciTester()
     for name, _ in pairs(entAraclarRusya) do
-        print("\n"..name)
         for k, v in pairs(entAraclarRusya[name]) do
-            print(k, v)   
         end
     end
 end

@@ -162,9 +162,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
                 net.WriteInt(logisticAmount, 9)
             net.SendToServer()
             print(logisticAmount)
-            print("çağırdım")
             if logiAmount <= 0 then
-                print("alo muhittin uzaylılar kacırdı diyorum")
             end
         end
         btn.Paint = function(self, w, h) PaintCustomButton(self, w, h, label) end
@@ -188,7 +186,7 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     -----------------------------------------------------
     local DWeapons = vgui.Create( "DCollapsibleCategory", panel )
     DWeapons:SetLabel("") 
-    DWeapons:SetPos(wide * 0.12, tall * 0.08)
+    DWeapons:SetPos(wide * 0.12, tall * 0.03)
     DWeapons:SetSize(categoryWide, categoryTall)
     DWeapons:SetExpanded(false)
 
@@ -228,6 +226,8 @@ function GW3.logiPanelMenuArmorUKR(parentPanel, entLocation, targetEntity, logiA
     AddLabel(ListWeapons, descTable["hat"], 50, 100, categoryWide,tall)
     AddLogiButton(ListWeapons, "Half Mask", "halfmask")
     AddLabel(ListWeapons, descTable["halfmask"], 50, 100, categoryWide,tall)
+    AddLogiButton(ListWeapons, "Korsar", "korsar")
+    AddLabel(ListWeapons, descTable["korsar"], 50, 100, categoryWide,tall)
 
     -----------------------------------------------------
     -- MISC VEHICLE CATEGORY

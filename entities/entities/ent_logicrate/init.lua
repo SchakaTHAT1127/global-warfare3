@@ -169,9 +169,7 @@ end
 function ENT:SetLogisticAmountUkr(amount)
     self.crateLogistic = amount
  	self:SetNWInt("logisticAmountUkr", math.Round(amount))
-    print(self:GetClass() .. " yeni lojistik amountı: " .. amount)
     if self.crateLogistic <= 0 then 
-    	print("if self.crateLogistic <= 0 then ")
     	hook.Run("logistikcrateBitti", "ent_logicrate")
     	self:Remove()
    	end
